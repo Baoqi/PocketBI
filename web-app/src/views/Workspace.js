@@ -199,9 +199,9 @@ class Workspace extends React.Component {
       const {
         dropdowns = []
       } = menu;
-      const dropdownItems = dropdowns.map(d => {
+      const dropdownItems = dropdowns.map((d, i) => {
         return (
-          <div className="workspace-dropdown-button" onClick={() => this.goToSubLink(d.link)}>
+          <div key={i} className="workspace-dropdown-button" onClick={() => this.goToSubLink(d.link)}>
             {d.value}
           </div>
         );

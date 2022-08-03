@@ -65,11 +65,11 @@ class Kanban extends React.Component {
         }
 
         blockItems.push(
-          <div class="kanban-block">
+          <div className="kanban-block">
             { blockTitleValue && (
-              <div class="kanban-block-title">{blockTitleValue}</div>
+              <div className="kanban-block-title">{blockTitleValue}</div>
             )}
-            <div class="kanban-block-body">
+            <div className="kanban-block-body">
               {blockRowItems}
             </div>
           </div>
@@ -77,9 +77,9 @@ class Kanban extends React.Component {
       }
 
       groupPanelItems.push(
-        <div class="kanban-column">
-          <div class="kanban-group-title">{groupBy}</div>
-          <div class="kanban-group-panel">
+        <div className="kanban-column">
+          <div className="kanban-group-title">{groupBy}</div>
+          <div className="kanban-group-panel">
             {blockItems}
           </div>
         </div>
@@ -87,7 +87,7 @@ class Kanban extends React.Component {
     } 
 
     return (
-      <div class="kanban-container">
+      <div className="kanban-container">
         {groupPanelItems}
       </div>
     );

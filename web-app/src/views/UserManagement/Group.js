@@ -276,7 +276,7 @@ class Group extends React.Component {
 
     return (
       <div className="full-page-content">
-        <div class="row">
+        <div className="row">
           <div className="float-left" style={{lineHeight: '33px', fontWeight: 700, marginRight: '15px'}}>
             {t('Group')}
           </div>

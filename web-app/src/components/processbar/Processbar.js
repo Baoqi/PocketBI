@@ -45,9 +45,9 @@ class Processbar extends React.Component {
     };
 
     return (
-      <div class="progress-container" style={containerStyle}>
-        <div class="progress-bar" style={progressBarStyle}></div>
-        <div class="progress-value" style={valueStyle}>{value}</div>
+      <div className="progress-container" style={containerStyle}>
+        <div className="progress-bar" style={progressBarStyle}></div>
+        <div className="progress-value" style={valueStyle}>{value}</div>
       </div>
     );
   }
