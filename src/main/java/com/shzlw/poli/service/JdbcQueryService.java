@@ -69,9 +69,10 @@ public class JdbcQueryService {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getTables(null, null, null, null);
             while (rs.next()) {
+                String schema = rs.getString("TABLE_SCHEM");
                 String name = rs.getString("TABLE_NAME");
                 String type = rs.getString("TABLE_TYPE");
-                tables.add(new Table(name, type));
+                tables.add(new Table(schema, name, type));
             }
 
             for (Table t : tables) {

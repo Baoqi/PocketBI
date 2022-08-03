@@ -53,6 +53,9 @@ class SchemaPanel extends React.Component {
     }
   }
   
+  getTableDisplayName = (schema, name) => {
+    return schema ? `${schema}.${name}` : name;
+  }
 
   render() {
     const {
@@ -64,7 +67,8 @@ class SchemaPanel extends React.Component {
     const schemaItems = [];
     for (let i = 0; i < schemas.length; i++) {
       const table = schemas[i];
-      const { 
+      const {
+        schema,
         name,
         type,
         columns = [],
@@ -75,16 +79,16 @@ class SchemaPanel extends React.Component {
         for (let j = 0; j < columns.length; j++) {
           const column = columns[j];
           columnItems.push(
-            <div className="row schema-column-row">
+            <div key={j} className="row schema-column-row">
               <div className="float-left schema-column-row-name">{column.name}</div>
               <div className="float-right schema-column-row-type">{column.dbType}({column.length})</div> 
             </div>
           );
         }
         schemaItems.push(
-          <div>
+          <div key={i}>
             <div className="row schema-title-row" onClick={() => this.toggleSchemaColumns(name)}>
-              <div className="float-left schema-title-row-name">{name}</div>
+              <div className="float-left schema-title-row-name">{this.getTableDisplayName(schema, name)}</div>
               <div className="float-right schema-title-row-type">{type}</div>
             </div>
             { showColumns && (
