@@ -29,7 +29,8 @@ class Login extends React.Component {
       const { ownerDocument } = thisNode;
       ownerDocument.addEventListener("keydown", this.onKeyDown);
     }
-  
+
+    /*
     axios.get('/info/general')
       .then(res => {
         const info = res.data;
@@ -45,7 +46,7 @@ class Login extends React.Component {
           i18n.changeLanguage(String(this.state.localeLanguage));
         });
       });
-
+*/
     const rememberMeConfig = localStorage.getItem(Constants.REMEMBERME);
     const rememberMe = rememberMeConfig && rememberMeConfig === Constants.YES;
     
