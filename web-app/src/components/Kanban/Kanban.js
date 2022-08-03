@@ -59,13 +59,13 @@ class Kanban extends React.Component {
             blockTitleValue = value;
           } else if (key !== groupByField) {
             blockRowItems.push(
-              <div className="kanban-block-body-row">{value}</div>
+              <div key={key} className="kanban-block-body-row">{value}</div>
             );
           }
         }
 
         blockItems.push(
-          <div className="kanban-block">
+          <div key={j} className="kanban-block">
             { blockTitleValue && (
               <div className="kanban-block-title">{blockTitleValue}</div>
             )}
@@ -77,7 +77,7 @@ class Kanban extends React.Component {
       }
 
       groupPanelItems.push(
-        <div className="kanban-column">
+        <div key={i} className="kanban-column">
           <div className="kanban-group-title">{groupBy}</div>
           <div className="kanban-group-panel">
             {blockItems}
