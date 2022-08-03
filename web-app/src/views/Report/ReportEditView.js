@@ -1019,14 +1019,14 @@ class ReportEditView extends React.Component {
                 <div className="row side-panel-content-row" style={{marginBottom: '5px'}}>
                   <div className="float-left">{t('Snap To Grid')}</div>
                   <div className="float-right">
-                    <Checkbox name="snapToGrid" value="" checked={this.state.style.snapToGrid} onChange={this.handleStyleValueChange} />
+                    <Checkbox name="snapToGrid" value="" checked={Boolean(this.state.style.snapToGrid)} onChange={this.handleStyleValueChange} />
                   </div>
                 </div>
 
                 <div className="row side-panel-content-row">
                   <div className="float-left">{t('Show Gridlines')}</div>
                   <div className="float-right">
-                    <Checkbox name="showGridlines" value="" checked={this.state.style.showGridlines} onChange={this.handleStyleValueChange} />
+                    <Checkbox name="showGridlines" value="" checked={Boolean(this.state.style.showGridlines)} onChange={this.handleStyleValueChange} />
                   </div>
                 </div>
 
