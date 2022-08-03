@@ -219,7 +219,7 @@ class GridItem extends React.PureComponent {
           <Table
             data={queryResultData}
             columns={columns}
-            defaultPageSize={defaultPageSize}
+            defaultPageSize={Number(defaultPageSize)}
             drillThrough={drillThrough}
             showPagination={showPagination}
             onTableTdClick={this.onTableTdClick}

@@ -5,8 +5,8 @@ import './Card.css';
 class Card extends React.Component {
 
   static propTypes = {
-    value: PropTypes.string.isRequired,
-    fontSize: PropTypes.string,
+    value: PropTypes.string,
+    fontSize: PropTypes.number,
     fontColor: PropTypes.string
   };
 
