@@ -12,7 +12,7 @@
     "echarts-for-react": "^2.0.16",
     "i18next": "^21.8.16",
     "react": "^16.13.1",
-    "react-ace": "^6.6.0",
+    "react-ace": "^10.1.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-color": "^2.18.0",
     "react-dom": "^16.13.1",

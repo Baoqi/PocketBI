@@ -2,9 +2,10 @@
 import React from 'react';
 import axios from 'axios';
 import AceEditor from 'react-ace';
-import 'brace/mode/mysql';
-import 'brace/mode/html';
-import 'brace/theme/xcode';
+import "ace-builds/src-noconflict/mode-mysql";
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/theme-xcode";
+import "ace-builds/src-noconflict/ext-language_tools";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
 

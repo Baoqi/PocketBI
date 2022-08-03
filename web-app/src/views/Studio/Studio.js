@@ -5,9 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AceEditor from 'react-ace';
 import { default as ReactSelect } from 'react-select';
 import { toast } from 'react-toastify';
-import 'brace/mode/mysql';
-import 'brace/mode/html';
-import 'brace/theme/xcode';
+import "ace-builds/src-noconflict/mode-mysql";
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/theme-xcode";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 import * as ApiService from '../../api/ApiService';
 import * as Util from '../../api/Util';
