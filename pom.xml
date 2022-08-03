@@ -79,6 +79,12 @@
             <version>1.3.61</version>
         </dependency>
 
+        <!-- JDBC Drivers -->
+        <dependency>
+            <groupId>com.clickhouse</groupId>
+            <artifactId>clickhouse-jdbc</artifactId>
+            <version>0.3.2-patch11</version>
+        </dependency>
 
     </dependencies>
 
