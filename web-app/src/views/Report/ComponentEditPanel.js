@@ -888,6 +888,10 @@ class ComponentEditPanel extends React.Component {
     return staticConfigPanel;
   }
 
+  getTableDisplayName = (schema, name) => {
+    return schema ? `${schema}.${name}` : name;
+  }
+
   render() {
     const { t } = this.props;
 
@@ -958,7 +962,8 @@ class ComponentEditPanel extends React.Component {
     const schemaItems = [];
     for (let i = 0; i < schemas.length; i++) {
       const table = schemas[i];
-      const { 
+      const {
+        schema,
         name,
         type,
         columns = [],
@@ -969,16 +974,16 @@ class ComponentEditPanel extends React.Component {
         for (let j = 0; j < columns.length; j++) {
           const column = columns[j];
           columnItems.push(
-            <div className="row schema-column-row">
+            <div key={j} className="row schema-column-row">
               <div className="float-left schema-column-name">{column.name}</div>
               <div className="float-right schema-column-type">{column.dbType}({column.length})</div> 
             </div>
           );
         }
         schemaItems.push(
-          <div>
+          <div key={i}>
             <div className="row schema-table-title" onClick={() => this.toggleSchemaColumns(name)}>
-              <div className="float-left">{name}</div>
+              <div className="float-left">{this.getTableDisplayName(schema, name)}</div>
               <div className="float-right">{type}</div>
             </div>
             { showColumns && (
