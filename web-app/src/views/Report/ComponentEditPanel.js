@@ -150,6 +150,7 @@ class ComponentEditPanel extends React.Component {
             sqlQuery: component.sqlQuery,
             type: type,
             subType: subType,
+            previousSubTypeMap: {[type]: subType},
             jdbcDataSourceId: component.jdbcDataSourceId,
             style: component.style,
             data: component.data
