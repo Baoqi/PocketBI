@@ -33,8 +33,9 @@ class ComponentEditPanel extends React.Component {
   }
 
   get initialState() {
+    const { t } = this.props;
     return {
-      activeTab: '',
+      activeTab: t('Config'),
       jdbcDataSources: [],
       componentId: null,
       title: '',
@@ -46,6 +47,8 @@ class ComponentEditPanel extends React.Component {
       queryResultError: null,
       type: Constants.STATIC,
       subType: Constants.TEXT,
+      // remember previous selected subTypes
+      previousSubTypeMap: {},
       style: this.initialStyle,
       // filter
       data: {},
@@ -196,9 +199,17 @@ class ComponentEditPanel extends React.Component {
 
   handleOptionChange = (name, value) => {
     if (name === 'type') {
+      const { t } = this.props;
       this.setState({
-        activeTab: '',
-        subType: ''
+        activeTab: t('Config'),
+        subType: this.state.previousSubTypeMap[value] || ''
+      });
+    } else if (name === 'subType') {
+      this.setState({
+        previousSubTypeMap: {
+          ...this.state.previousSubTypeMap,
+          [this.state.type]: value
+        }
       });
     }
 
