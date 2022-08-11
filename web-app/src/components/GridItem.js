@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactEcharts from 'echarts-for-react';
+import ReactEcharts from 'echarts-for-react-hotfix302';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import * as EchartsApi from '../api/EchartsApi';

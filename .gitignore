@@ -1,5 +1,6 @@
 .idea/
 *.iml
+.DS_Store
 target/
 .settings/org.eclipse.jdt.core.prefs
 .classpath
