@@ -94,7 +94,12 @@ export const getChartOption = (type, data, config, title) => {
   } else if (type === Constants.FUNNEL) {
     chartOption = getFunnelOption(data, config);
   }
-  return chartOption;
+
+  // disable animation for all charts
+  return {
+    ...chartOption,
+    animation: false
+  };
 }
 
 /**
