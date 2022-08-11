@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from '../../components/routing/RouterUtil';
 import axios from 'axios';
 import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';

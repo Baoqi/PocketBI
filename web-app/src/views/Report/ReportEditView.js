@@ -1,7 +1,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
@@ -15,6 +14,7 @@ import ColorPicker from '../../components/ColorPicker/ColorPicker';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import DatePicker from '../../components/filters/DatePicker';
 import DropdownDialog from '../../components/DropdownDialog/DropdownDialog';
+import { withRouter } from '../../components/routing/RouterUtil';
 
 import * as Constants from '../../api/Constants';
 import * as Util from '../../api/Util';
@@ -74,7 +74,7 @@ class ReportEditView extends React.Component {
       ownerDocument.addEventListener("keydown", this.onKeyDown);
     }
 
-    const id = this.props.match.params.id;
+    const id = this.props.params.id;
     if (id === undefined) {
       // If the drill through is triggered from the full-report page already, this component is remounted but not FullScreenView.
       const url = this.props.location.search;

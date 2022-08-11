@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Route, withRouter, Switch } from 'react-router-dom';
+import { Route, Routes } from "react-router-dom";
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
@@ -12,6 +12,7 @@ import ReportEditView from './ReportEditView';
 import Modal from '../../components/Modal/Modal';
 import Tabs from '../../components/Tabs/Tabs';
 import SearchInput from '../../components/SearchInput/SearchInput';
+import { withRouter } from '../../components/routing/RouterUtil';
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
 const ROUTE_WORKSPACE_CANNED_REPORT = '/workspace/report/canned/';
@@ -143,7 +144,7 @@ class Report extends Component {
       activeCannedReportId: 0,
       activeReportId: 0
     }, () => {
-      this.props.history.push('/workspace/report');
+      this.props.navigate('/workspace/report');
     });
   }
 
@@ -183,7 +184,7 @@ class Report extends Component {
         const reportId = res.data;
         this.closeEditPanel();
         this.fetchReports();
-        this.props.history.push(`/workspace/report/${reportId}`);
+        this.props.navigate(`/workspace/report/${reportId}`);
         this.setState({
           activeReportId: reportId,
         });
@@ -197,7 +198,7 @@ class Report extends Component {
     this.setState({
       activeReportId: reportId
     }, () => {
-      this.props.history.push(`/workspace/report/${reportId}`);
+      this.props.navigate(`/workspace/report/${reportId}`);
     });
   }
 
@@ -205,7 +206,7 @@ class Report extends Component {
     this.setState({
       activeCannedReportId: reportId
     }, () => {
-      this.props.history.push(`/workspace/report/canned/${reportId}`);
+      this.props.navigate(`/workspace/report/canned/${reportId}`);
     });
   }
 
@@ -218,7 +219,7 @@ class Report extends Component {
     this.setState({
       activeReportId: 0
     }, () => {
-      this.props.history.push('/workspace/report');
+      this.props.navigate('/workspace/report');
     });
   }
 
@@ -231,7 +232,7 @@ class Report extends Component {
     this.setState({
       activeCannedReportId: 0
     }, () => {
-      this.props.history.push('/workspace/report');
+      this.props.navigate('/workspace/report');
     });
   }
 
@@ -408,36 +409,36 @@ class Report extends Component {
           </div>
         </div>
         <div className="report-content">
-          <Switch>
-            <Route 
-              exact path="/workspace/report/:id" 
-              render={(props) => 
-                <ReportEditView 
-                  key={props.match.params.id} 
-                  onReportSave={this.onReportSave} 
-                  onReportDelete={this.onReportDelete} 
-                  editable={editable}
-                  reportType={Constants.ADHOC}
-                  onCannedReportSave={this.onCannedReportSave}
-                  onFavouriteChange={this.onFavouriteChange}
-                />
-              } 
+          <Routes>
+            <Route
+                exact path=":id"
+                element={
+                    <ReportEditView
+                        key={this.props.location.key}
+                        onReportSave={this.onReportSave}
+                        onReportDelete={this.onReportDelete}
+                        editable={editable}
+                        reportType={Constants.ADHOC}
+                        onCannedReportSave={this.onCannedReportSave}
+                        onFavouriteChange={this.onFavouriteChange}
+                    />
+                }
             />
-            <Route 
-              path="/workspace/report/canned/:id" 
-              render={(props) => 
-                <ReportEditView 
-                  key={props.match.params.id}  
-                  onCannedReportDelete={this.onCannedReportDelete} 
+            <Route
+              path="canned/:id"
+              element={
+                <ReportEditView
+                  key={this.props.location.key}
+                  onCannedReportDelete={this.onCannedReportDelete}
                   editable={false}
                   reportType={Constants.CANNED}
                 />
               } 
             />
-            <EmptyReport
-              info={t(info)}
-            />
-          </Switch>
+            <Route element = {<EmptyReport
+                info={t(info)}
+            />} />
+          </Routes>
         </div>
 
         <Modal 

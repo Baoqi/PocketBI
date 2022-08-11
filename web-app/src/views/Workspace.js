@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import axios from 'axios';
 import { withTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ import SharedReportView from './Event/SharedReportView';
 import AuditLog from './Event/AuditLog';
 
 import * as Constants from '../api/Constants';
+import { withRouter } from '../components/routing/RouterUtil';
 import './Workspace.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -121,7 +122,7 @@ class Workspace extends React.Component {
         menutItems: menutItemsClone,
         showAccountDropdown: false
       }, () => {
-        this.props.history.push(menu.link);
+        this.props.navigate(menu.link);
       });
     }
   }
@@ -155,7 +156,7 @@ class Workspace extends React.Component {
       menutItems: menutItemsClone,
       showAccountDropdown: false
     }, () => {
-      this.props.history.push(link);
+      this.props.navigate(link);
     });
   }
 
@@ -250,18 +251,18 @@ class Workspace extends React.Component {
           </div>
         </div>
         <div className="workspace-content">
-          <Switch>
-            <Route exact path="/workspace/datasource" component={DataSource} />
-            <Route exact path="/workspace/account" component={Account} />
-            <Route exact path="/workspace/report/fullscreen" component={ReportFullScreenView} />
-            <Route exact path="/workspace/group" component={Group} />
-            <Route exact path="/workspace/user" render={() => <User {...this.props} />} />
-            <Route exact path="/workspace/auditlog" component={AuditLog} />
-            <Route exact path="/workspace/sharedreport" component={SharedReportView} />
-            <Route exact path="/workspace/studio" component={Studio} />
-            <Route path="/workspace/report" render={() => <Report {...this.props} />} />
-            <Route component={PageNotFound} />
-          </Switch>
+          <Routes>
+            <Route exact path="datasource" element={<DataSource />} />
+            <Route exact path="account" element={<Account />} />
+            <Route exact path="report/fullscreen" element={<ReportFullScreenView />} />
+            <Route exact path="group" element={<Group />} />
+            <Route exact path="user" element={<User {...this.props} />} />
+            <Route exact path="auditlog" element={<AuditLog />} />
+            <Route exact path="sharedreport" element={<SharedReportView />} />
+            <Route exact path="studio" element={<Studio />} />
+            <Route path="report/*" element={<Report {...this.props} />} />
+            <Route element={<PageNotFound />} />
+          </Routes>
         </div>
       </React.Fragment>
     );

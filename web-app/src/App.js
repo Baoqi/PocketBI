@@ -1,7 +1,8 @@
 import React from 'react';
-import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import axios from 'axios';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { withRouter } from "./components/routing/RouterUtil";
 import { 
   faChalkboard, faDatabase, faUsersCog, faPlus, faTimes,
   faEdit, faTrashAlt, faPlayCircle, faStopCircle, faRedoAlt,
@@ -144,7 +145,7 @@ class App extends React.Component {
         sysRole: '',
         isAuthorizing: false
       }, () => {
-        this.props.history.push('/login');
+        this.props.navigate('/login');
       });
     } else {
       this.onLoginSuccess(loginResponse, currentPath);
@@ -153,7 +154,7 @@ class App extends React.Component {
 
   onLoginSuccess = (loginResponse = {}, pathname = '/') => {
     if (loginResponse.isTempPassword) {
-      this.props.history.push('/changepassword');
+      this.props.navigate('/changepassword');
     } else {
       this.setState({
         username: loginResponse.username,
@@ -164,7 +165,7 @@ class App extends React.Component {
         if (pathname !== '/' && pathname !== '/login') {
           directUrl = pathname;
         }
-        this.props.history.push(directUrl);
+        this.props.navigate(directUrl);
       });
     }
   }
@@ -175,7 +176,7 @@ class App extends React.Component {
       sysRole: '',
       isAuthorizing: false
     }, () => {
-      this.props.history.push('/login');
+      this.props.navigate('/login');
     });
   }
 
@@ -240,20 +241,17 @@ class App extends React.Component {
 
     return (
       <div className="app">
-        <Switch>
-          <Route exact path="/" render={() => <Login onLoginSuccess={this.onLoginSuccess} />} />
-          <Route path="/login" render={() => <Login onLoginSuccess={this.onLoginSuccess} />} />
-          <Route path="/changepassword" component={ChangeTempPassword} />
-          <PrivateRoute 
-            authenticated={isAuthenticated} 
-            path='/workspace' 
-            component={Workspace} 
-            username={username}
-            sysRole={sysRole} 
-            onLogout={this.onLogout}
-          />
-          <Route component={PageNotFound} />
-        </Switch>
+        <Routes>
+          <Route exact path="/" element={<Login onLoginSuccess={this.onLoginSuccess} />} />
+          <Route path="login" element={<Login onLoginSuccess={this.onLoginSuccess} />} />
+          <Route path="changepassword" element={<ChangeTempPassword />} />
+          <Route path="workspace/*" element={isAuthenticated ? (
+              <Workspace  username={username} sysRole={sysRole} onLogout={this.onLogout} />
+          ) : (
+              <Navigate replace to='/login' />
+          ) } />
+          <Route element={<PageNotFound />} />
+        </Routes>
         <ToastContainer
           position="top-center"
           autoClose={3000}
@@ -264,19 +262,6 @@ class App extends React.Component {
       </div>
     );
   }
-}
-
-function PrivateRoute({component: Component, authenticated, ...rest}) {
-  return (
-    <Route
-      {...rest}
-      render={
-        (props) => authenticated === true
-        ? <Component {...props} {...rest} />
-        : <Redirect to={{pathname: '/login', state: {from: props.location}}} />
-      }
-    />
-  )
 }
 
 export default (withTranslation()(withRouter(App)));

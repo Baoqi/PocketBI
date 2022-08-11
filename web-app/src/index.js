@@ -7,8 +7,8 @@ import './index.css';
 
 ReactDOM.render(
   <BrowserRouter basename="/poli">
-    <App />
-  </BrowserRouter>, 
+      <App />
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
