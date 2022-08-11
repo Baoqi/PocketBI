@@ -545,7 +545,8 @@ class ComponentEditPanel extends React.Component {
     } else if (subType === Constants.PIE || subType === Constants.TREEMAP) {
       const {
         key,
-        value
+        value,
+        showLegend = true
       } = data;
 
       chartConfigPanel = (
@@ -569,6 +570,13 @@ class ComponentEditPanel extends React.Component {
             optionDisplay={'name'}
             optionValue={'name'}
           />
+
+          {subType === Constants.PIE && (<div>
+            <label>{t('Show Legend')}</label>
+            <div style={{marginBottom: '8px'}}>
+              <Checkbox name="showLegend" value="" checked={showLegend} onChange={this.handleComponentDataChange} />
+            </div>
+          </div>)}
 
           {colorPlattePanel}
         </div>
@@ -636,7 +644,8 @@ class ComponentEditPanel extends React.Component {
       const {
         key,
         value,
-        sort = 'descending'
+        sort = 'descending',
+        showLegend = true
       } = data;
 
       const SORT_OPTIONS = ['ascending', 'descending'];
@@ -670,6 +679,11 @@ class ComponentEditPanel extends React.Component {
             onChange={this.handleComponentDataChange}
             options={SORT_OPTIONS}
           />
+
+          <label>{t('Show Legend')}</label>
+          <div style={{marginBottom: '8px'}}>
+            <Checkbox name="showLegend" value="" checked={showLegend} onChange={this.handleComponentDataChange} />
+          </div>
 
           {colorPlattePanel}
         </div>

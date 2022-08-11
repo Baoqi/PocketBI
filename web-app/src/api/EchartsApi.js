@@ -100,12 +100,13 @@ export const getChartOption = (type, data, config, title) => {
 /**
  * Pie chart
  */
-const getPieOptionTemplate = (colorPlatte = 'default', legendData, seriesData) => {
+const getPieOptionTemplate = (colorPlatte = 'default', showLegend, legendData, seriesData) => {
   return {
     color: getColorPlatte(colorPlatte),
     tooltip: {
     },
     legend: {
+      show: showLegend,
       type: 'scroll',
       orient: 'vertical',
       data: legendData,
@@ -128,10 +129,11 @@ const getPieOption = (data, config) => {
   const {
     key,
     value,
-    colorPlatte
+    colorPlatte,
+    showLegend = true
   } = config;
   const result = keyValueToLegendSeries(key, value, data);
-  return getPieOptionTemplate(colorPlatte, result.legendData, result.seriesData);
+  return getPieOptionTemplate(colorPlatte, showLegend, result.legendData, result.seriesData);
 }
 
 /**
@@ -444,7 +446,7 @@ const getAreaOption = (data, config) => {
 /**
  * Funnel chart
  */
-const getFunnelOptionTemplate = (colorPlatte = 'default', legendData, seriesData, config = {}) => {
+const getFunnelOptionTemplate = (colorPlatte = 'default', showLegend, legendData, seriesData, config = {}) => {
   const {
     sort = 'descending'
   } = config;
@@ -457,6 +459,7 @@ const getFunnelOptionTemplate = (colorPlatte = 'default', legendData, seriesData
       containLabel: true
     },
     legend: {
+      show: showLegend,
       data: legendData
     },
     calculable: true,
@@ -474,10 +477,11 @@ const getFunnelOption = (data, config) => {
   const {
     key,
     value,
-    colorPlatte
+    colorPlatte,
+    showLegend = true
   } = config;
   const result = keyValueToLegendSeries(key, value, data);
-  return getFunnelOptionTemplate(colorPlatte, result.legendData, result.seriesData, config);
+  return getFunnelOptionTemplate(colorPlatte, showLegend, result.legendData, result.seriesData, config);
 }
 
 const getTreemapOptionTemplate = (colorPlatte = 'default', seriesData) => {
