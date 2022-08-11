@@ -69,7 +69,7 @@ class ChangeTempPassword extends React.Component {
           if (loginResponse.error) {
             toast.error(loginResponse.error);
           } else {
-            this.props.history.push('/workspace/report');
+            this.props.navigate('/workspace/report');
           }
         });
     } else {

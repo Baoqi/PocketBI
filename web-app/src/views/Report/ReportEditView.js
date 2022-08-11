@@ -477,11 +477,11 @@ class ReportEditView extends React.Component {
             const report = res.data;
             const nextReport = report.name;
             const nextLink = `/workspace/report/fullscreen?$toReport=${nextReport}&$fromReport=${name}&${columnName}=${columnValue}`;
-            this.props.history.push(nextLink);
+            this.props.navigate(nextLink);
           });
       } else {
         const nextLink = `/workspace/report/${reportId}?$fromReport=${name}&${columnName}=${columnValue}`;
-        this.props.history.push(nextLink);
+        this.props.navigate(nextLink);
       }
     }
   }
@@ -507,7 +507,7 @@ class ReportEditView extends React.Component {
   }
 
   goBackToFromReport = () => {
-    this.props.history.goBack();
+    this.props.navigate(-1);
   }
 
   confirmDelete = () => {
