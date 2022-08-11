@@ -1062,22 +1062,22 @@ class ReportEditView extends React.Component {
           <div className="form-panel">
             <button className="button square-button button-transparent ml-4" onClick={this.toggleFavourite}>
               { isFavourite ? (
-                <FontAwesomeIcon icon="heart"  fixedWidth />
+                <FontAwesomeIcon icon="heart" title={t('Favourite')} fixedWidth />
               ) : (
-                <FontAwesomeIcon icon={['far', 'heart']}  fixedWidth />
+                <FontAwesomeIcon icon={['far', 'heart']} title={t('Favourite')} fixedWidth />
               )}
             </button>
             <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
-              <FontAwesomeIcon icon="archive"  fixedWidth />
+              <FontAwesomeIcon icon="archive" title={t('Save Canned Report')}  fixedWidth />
             </button>
             <button className="button square-button button-transparent ml-4" onClick={this.openSharePanel}>
-              <FontAwesomeIcon icon="share-square"  fixedWidth />
+              <FontAwesomeIcon icon="share-square" title={t('Share')} fixedWidth />
             </button>
             <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
-              <FontAwesomeIcon icon="tv"  fixedWidth />
+              <FontAwesomeIcon icon="tv" title={t('Show')}  fixedWidth />
             </button>
             <button className="button square-button button-transparent ml-4" onClick={this.openExportToPdfPanel}>
-              <FontAwesomeIcon icon="file-pdf"  fixedWidth />
+              <FontAwesomeIcon icon="file-pdf" title={t('Export To PDF')} fixedWidth />
             </button>
           </div>
         </DropdownDialog>
