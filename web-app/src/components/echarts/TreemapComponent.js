@@ -4,7 +4,7 @@ import BaseEChartsComponent from "./BaseEChartsComponent";
 import Select from "../Select";
 
 class TreemapComponent extends BaseEChartsComponent {
-    getChartOption(_type, data, config, title) {
+    getChartOption(data, config, title) {
         const {
             key,
             value,

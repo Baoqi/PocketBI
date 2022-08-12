@@ -45,7 +45,7 @@ const getLineOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
 
 
 class LineComponent extends BaseEChartsComponent {
-    getChartOption(_type, data, config, title) {
+    getChartOption(data, config, title) {
         const {
             xAxis,
             legend,

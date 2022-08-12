@@ -63,7 +63,7 @@ const getBarOptionTemplate = (colorPlatte = 'default', legendData, axisData, ser
 
 
 class BarComponent extends BaseEChartsComponent {
-    getChartOption(type, data, config, title) {
+    getChartOption(data, config, title) {
         const {
             xAxis,
             legend,

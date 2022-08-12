@@ -254,7 +254,7 @@ class GridItem extends React.PureComponent {
         );
 
       } else {
-        const chartOption = getEChartsComponent(subType).getChartOption(subType, queryResultData, data, title);
+        const chartOption = getEChartsComponent(subType).getChartOption(queryResultData, data, title);
         componentItem = (
           <ReactEcharts 
             option={{

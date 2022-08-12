@@ -74,7 +74,7 @@ const getHeatmapOptionTemplate = (xAxisData, yAxisData, seriesData, min, max, co
 };
 
 class HeatmapComponent extends BaseEChartsComponent {
-    getChartOption(_type, data, config, title) {
+    getChartOption(data, config, title) {
         const {
             xAxis,
             yAxis,

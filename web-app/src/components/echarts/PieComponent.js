@@ -5,7 +5,7 @@ import Select from '../Select';
 import Checkbox from '../Checkbox/Checkbox';
 
 class PieComponent extends BaseEChartsComponent {
-    getChartOption(type, data, config, title) {
+    getChartOption(data, config, title) {
         const {
             key,
             value,

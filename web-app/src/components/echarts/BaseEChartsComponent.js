@@ -4,7 +4,7 @@ import * as Constants from "../../api/Constants";
 import Checkbox from "../Checkbox/Checkbox";
 
 class BaseEChartsComponent {
-    getChartOption(type, data, config, title) {
+    getChartOption(data, config, title) {
         throw new Error("not implemented!");
     }
 

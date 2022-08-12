@@ -43,7 +43,7 @@ const getAreaOptionTemplate = (colorPlatte = 'default', legendData, xAxisData, s
 };
 
 class AreaComponent extends BaseEChartsComponent {
-    getChartOption(_type, data, config, title) {
+    getChartOption(data, config, title) {
         const {
             xAxis,
             legend,
