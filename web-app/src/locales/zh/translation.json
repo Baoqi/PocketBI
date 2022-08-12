@@ -27,8 +27,10 @@
   "Connection Url": "连接 Url",
   "Driver Class Name": "驱动类名",
   "Ping": "Ping",
+  "Account": "账户",
   "Password": "密码",
   "Login": "登录",
+  "Logout": "登出",
   "Remember me": "记住我",
   "Version": "版本",
   "Locale": "语言",
@@ -40,6 +42,10 @@
   "Component": "组件",
   "Save Canned Report": "保存为快照",
   "General": "通用",
+  "Studio": "工作室",
+  "Query Name": "查询名称",
+  "Endpoint Name": "终端名称",
+  "Access Code": "访问码",
   "Width": "宽度",
   "Fixed Width": "固定宽度",
   "Height": "高度",
@@ -122,5 +128,6 @@
   "Top": "上",
   "Bottom": "下",
   "Project": "项目",
-  "Export To PDF": "导出PDF"
+  "Export To PDF": "导出PDF",
+  "Audit Log": "审计日志"
 }

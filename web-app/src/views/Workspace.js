@@ -56,7 +56,7 @@ const MENU_ITEMS = [
     dropdowns: [
       {
         link: '/workspace/sharedreport',
-        value: 'Shared Report',
+        value: 'Shared Reports',
       },
       {
         link: '/workspace/auditlog',
@@ -203,7 +203,7 @@ class Workspace extends React.Component {
       const dropdownItems = dropdowns.map((d, i) => {
         return (
           <div key={i} className="workspace-dropdown-button" onClick={() => this.goToSubLink(d.link)}>
-            {d.value}
+            {t(d.value)}
           </div>
         );
       });
@@ -241,10 +241,10 @@ class Workspace extends React.Component {
             { this.state.showAccountDropdown && (
               <div className="workspace-account-dropdown">
                 <div className="workspace-dropdown-button" onClick={() => this.goToSubLink('/workspace/account')}>
-                  Account
+                  {t('Account')}
                 </div>
                 <div className="workspace-dropdown-button" onClick={this.logout}>
-                  Logout
+                  {t('Logout')}
                 </div>
               </div>
             )}

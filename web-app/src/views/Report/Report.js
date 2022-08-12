@@ -23,6 +23,7 @@ class Report extends Component {
 
   constructor(props) {
     super(props);
+    const { t } = this.props;
     this.state = {
       searchValue: '',
       reports: [],
@@ -31,7 +32,7 @@ class Report extends Component {
       name: '',
       project: '',
       cannedReports: [],
-      activeTab: AD_HOC,
+      activeTab: t(AD_HOC),
       activeCannedReportId: 0,
       favouriteReports: [],
       projects: [],
@@ -41,6 +42,7 @@ class Report extends Component {
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
+    const { t } = this.props;
     for (let i = 0; i < ROUTE_PATTERNS.length; i++) {
       const pattern = ROUTE_PATTERNS[i];
       const index = pathname.indexOf(pattern);
@@ -48,7 +50,7 @@ class Report extends Component {
         const activeReportId = Number(pathname.substring(index + pattern.length));
         let activeTab;
         if (pattern === ROUTE_WORKSPACE_REPORT) {
-          activeTab = AD_HOC;
+          activeTab = t(AD_HOC);
           this.setState({
             activeReportId: activeReportId,
             activeTab: activeTab,

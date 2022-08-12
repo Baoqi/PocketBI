@@ -27,8 +27,10 @@
   "Connection Url": "URL de conexión",
   "Driver Class Name": "Nombre de clase de Driver",
   "Ping": "Ping",
+  "Account": "Cuenta",
   "Password": "Contraseña",
   "Login": "Iniciar Sesión",
+  "Logout": "Cerrar Sesión",
   "Remember me": "Recuérdame",
   "Version": "Versión",
   "Locale": "Local",
@@ -40,6 +42,10 @@
   "Component": "Componente",
   "Save Canned Report": "Guarda informe enlatado",
   "General": "General",
+  "Studio": "Estudio",
+  "Query Name": "Nombre de la consulta",
+  "Endpoint Name": "Nombre del punto final",
+  "Access Code": "Código de acceso",
   "Width": "Anchura",
   "Fixed Width": "Anchura fija",
   "Height": "Altura",
@@ -122,5 +128,6 @@
   "Top": "Arriba",
   "Bottom": "Abajo",
   "Project": "Proyecto",
-  "Export To PDF": "Exportar como PDF"
+  "Export To PDF": "Exportar como PDF",
+  "Audit Log": "Auditoria"
 }

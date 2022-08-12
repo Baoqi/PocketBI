@@ -27,8 +27,10 @@
   "Connection Url": "Connection Url",
   "Driver Class Name": "Driver Class Name",
   "Ping": "Ping",
+  "Account": "Account",
   "Password": "Password",
   "Login": "Login",
+  "Logout": "Logout",
   "Remember me": "Remember me",
   "Version": "Version",
   "Locale": "Locale",
@@ -40,6 +42,10 @@
   "Component": "Component",
   "Save Canned Report": "Save Canned Report",
   "General": "General",
+  "Studio": "Studio",
+  "Query Name": "Query Name",
+  "Endpoint Name": "Endpoint Name",
+  "Access Code": "Access Code",
   "Width": "Width",
   "Fixed Width": "Fixed Width",
   "Height": "Height",
@@ -126,5 +132,6 @@
 
   "Group By": "Group By",
   "Block Title": "Block Title",
-  "Fixed Header": "Fixed Header"
+  "Fixed Header": "Fixed Header",
+  "Audit Log": "Audit Log"
 }
