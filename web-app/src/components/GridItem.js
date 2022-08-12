@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import ReactEcharts from 'echarts-for-react-hotfix302';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import * as EchartsApi from '../api/EchartsApi';
 import * as Util from '../api/Util';
 import * as Constants from '../api/Constants';
 
@@ -17,6 +16,7 @@ import InnerHtml from './widgets/InnerHtml';
 import DatePicker from './filters/DatePicker';
 import Card from './widgets/Card';
 import Kanban from './Kanban/Kanban';
+import { getEChartsComponent } from "./echarts/ComponentFactory";
 
 class GridItem extends React.PureComponent {
 
@@ -252,19 +252,23 @@ class GridItem extends React.PureComponent {
             blockTitleField={blockTitleField} 
           />
         );
-        
+
       } else {
-        const chartOption = EchartsApi.getChartOption(subType, queryResultData, data, title);
+        const chartOption = getEChartsComponent(subType).getChartOption(subType, queryResultData, data, title);
         componentItem = (
           <ReactEcharts 
-            option={chartOption}   
+            option={{
+              ...chartOption,
+              // disable animation for all charts
+              animation: false
+            }}
             notMerge={true}
             lazyUpdate={true}
             className="echarts"
             onEvents={onChartEvents}  
           />
         );
-      } 
+      }
     } else if (type === Constants.FILTER) {
       if (subType === Constants.SLICER) {
         componentItem = (
