@@ -30,10 +30,6 @@ const SHINE_COLOR_PALETTE = [
   '#005eaa','#339ca8','#cda819','#32a487'
 ];
 
-const getRandomInt = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 const keyValueToLegendSeries = (key, value, data) => {
   const legendData = [];
   const seriesData = [];
@@ -49,19 +45,6 @@ const keyValueToLegendSeries = (key, value, data) => {
     legendData,
     seriesData
   }
-}
-
-const rgbaToHex = (color) => {
-  if (color.startsWith('#')) {
-    return color;
-  }
-
-  const newRbga = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-  return newRbga ? "#" +
-    ("0" + parseInt(newRbga[1], 10).toString(16)).slice(-2) +
-    ("0" + parseInt(newRbga[2], 10).toString(16)).slice(-2) +
-    ("0" + parseInt(newRbga[3], 10).toString(16)).slice(-2) 
-    : '';
 }
 
 const getColorPlatte = (name) => {
@@ -645,110 +628,6 @@ const getHeatmapOption = (data, config) => {
 
   return getHeatmapOptionTemplate(xAxisData, yAxisData, seriesData, min, max, config);
 }
-
-
-const getCalendarHeatmapOptionTemplate = (min, max, seriesData) => {
-  return {
-    visualMap: {
-      show: false,
-      min: 1,
-      max: 10
-    },
-    calendar: {
-      range: '2017'
-    },
-    series: {
-      type: 'heatmap',
-      coordinateSystem: 'calendar',
-      data: getVirtulData(2017)
-    }
-  }
-}
-
-function formatDate(date) {
-  var d = new Date(date),
-    month = '' + (d.getMonth() + 1),
-    day = '' + d.getDate(),
-    year = d.getFullYear();
-
-  if (month.length < 2) month = '0' + month;
-  if (day.length < 2) day = '0' + day;
-
-  return [year, month, day].join('-');
-}
-
-function getVirtulData(year) {
-    year = year || '2017';
-    var date = + new Date(year + '-01-01');
-    var end = + new Date(year + '-12-31');
-    var dayTime = 3600 * 24 * 1000;
-    var data = [];
-    for (let time = date; time <= end; time += dayTime) {
-      const value = getRandomInt(1, 10);
-      data.push([
-        formatDate(new Date(time)),
-        value
-      ]);
-    }
-    
-    return data;
-}
-
-const buildTimeLineOption = () => {
-  const seriesData = [];
-  for (let i = 1; i <= 10; i++) {
-    const name = 'a' + i;
-    const epoch = + new Date();
-    const date = new Date(epoch);
-    const value = getRandomInt(1, 10);
-    seriesData.push({
-      name: name,
-      value: [
-        [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/'), 
-        value
-      ]
-    });
-  }
-
-  return getTimeLineOptionTemplate(seriesData);
-}
-
-const buildCalenarHeatmapOption = () => {
-  return getCalendarHeatmapOptionTemplate();
-}
-
-
-
-/**
- * TODO: Time line chart
- */
-const getTimeLineOptionTemplate = (seriesData) => {
-  return {
-    color: DEFAULT_COLOR_PALETTE,
-    tooltip: {
-    },
-    xAxis: {
-      type: 'time',
-      axisLabel: {
-        formatter: (value, index) => {
-          const date = new Date(value);
-          return [date.getMonth() + 1, date.getDate()].join('-');
-        }
-      },
-      boundaryGap: false
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        type: 'line',
-        data: seriesData
-      }
-    ]
-  }
-};
-
 
 const dataListToGrid = (dataList = [], xAxis, yAxis, legend, defaultValue = 0) => {
   const legendData = new Set();
