@@ -1,8 +1,6 @@
 package com.shzlw.poli.filter;
 
-import com.shzlw.poli.dto.SharedLinkInfo;
 import com.shzlw.poli.model.User;
-import com.shzlw.poli.service.SharedReportService;
 import com.shzlw.poli.service.UserService;
 import com.shzlw.poli.util.Constants;
 import com.shzlw.poli.util.HttpUtils;
@@ -27,9 +25,6 @@ public class AuthFilter implements Filter {
     @Autowired
     UserService userService;
 
-    @Autowired
-    SharedReportService sharedReportService;
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -41,8 +36,7 @@ public class AuthFilter implements Filter {
         }
 
         if (authBySessionKey(httpRequest, path)
-            || authByApiKey(httpRequest, path)
-            || authByShareKey(httpRequest, path)) {
+            || authByApiKey(httpRequest, path)) {
             chain.doFilter(request, response);
             return;
         }
@@ -88,48 +82,6 @@ public class AuthFilter implements Filter {
 
         httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
         return AuthFilterHelper.validateByApiKey(httpRequest.getMethod(), path);
-    }
-
-    private boolean authByShareKey(HttpServletRequest httpRequest, String path) {
-        String shareKey = httpRequest.getHeader(Constants.HTTP_HEADER_SHARE_KEY);
-        if (shareKey == null) {
-            return false;
-        }
-
-        SharedLinkInfo linkInfo = sharedReportService.getSharedLinkInfoByShareKey(shareKey);
-        if (linkInfo == null) {
-            return false;
-        }
-
-        User user = linkInfo.getUser();
-        if (user == null) {
-            return false;
-        }
-
-        httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
-        return validateByShareKey(httpRequest.getMethod(), path, linkInfo, shareKey);
-    }
-
-    private static boolean validateByShareKey(String requestMethod, String path, SharedLinkInfo linkInfo, String shareKey) {
-        if (linkInfo == null) {
-            return false;
-        }
-
-        boolean isValid = false;
-        long reportId = linkInfo.getReportId();
-        Set<String> componentQueryUrls = linkInfo.getComponentQueryUrls();
-        if (Constants.HTTP_METHOD_GET.equals(requestMethod)) {
-            if (path.equals("/ws/reports/" + reportId)
-                    || path.equals("/ws/components/report/" + reportId)
-                    || path.equals("/ws/reports/sharekey/" + shareKey)) {
-                isValid = true;
-            }
-        } else if (Constants.HTTP_METHOD_POST.equals(requestMethod)) {
-            if (componentQueryUrls.contains(path)) {
-                isValid = true;
-            }
-        }
-        return isValid;
     }
 
     protected void return401(ServletResponse response) throws IOException {

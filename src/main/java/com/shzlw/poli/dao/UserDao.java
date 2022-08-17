@@ -79,19 +79,6 @@ public class UserDao {
         }
     }
 
-    public User findByShareKey(String shareKey) {
-        String sql = "SELECT u.id, u.username, u.name, u.sys_role, u.session_key "
-                    + "FROM p_user u, p_shared_report sr "
-                    + "WHERE u.id = sr.user_id "
-                    + "AND sr.share_key=?";
-        try {
-            User user = (User) jt.queryForObject(sql, new Object[]{ shareKey }, new UserSesssionKeyMapper());
-            return user;
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
     public User findAccount(long id) {
         String sql = "SELECT id, username, name, sys_role, api_key "
                     + "FROM p_user WHERE id=?";

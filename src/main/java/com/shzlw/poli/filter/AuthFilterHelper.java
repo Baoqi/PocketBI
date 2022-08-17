@@ -12,8 +12,7 @@ public final class AuthFilterHelper {
             "/ws/reports",
             "/ws/cannedreports",
             "/ws/components/report/",
-            "/ws/users/account",
-            "/ws/sharedreports/generate-sharekey"
+            "/ws/users/account"
     );
 
     private static final List<String> VIEWER_PUT_PATH = Arrays.asList(

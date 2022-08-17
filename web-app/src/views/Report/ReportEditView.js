@@ -33,7 +33,6 @@ class ReportEditView extends React.Component {
       showConfirmDeletionPanel: false,
       showCannedReportPanel: false,
       showControl: true,
-      showSharePanel: false,
       showFunctionButtonDialog: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
@@ -53,10 +52,7 @@ class ReportEditView extends React.Component {
       reportType: '',
       reportViewWidth: 1000,
       cannedReportName: '',
-      cannedReportData: {},
-      // share url
-      expiredBy: new Date(),
-      shareUrl: ''
+      cannedReportData: {}
     }
 
     this.componentViewPanel = React.createRef();
@@ -76,12 +72,8 @@ class ReportEditView extends React.Component {
       const url = this.props.location.search;
       const params = new URLSearchParams(url);
       const reportName = params.get('$toReport');
-      const shareKey = params.get('$shareKey');
       if (reportName !== null) {
         this.loadViewByReportName();
-        return;
-      } else if (shareKey !== null) {
-        this.loadViewByShareKey();
         return;
       }
     }
@@ -193,35 +185,6 @@ class ReportEditView extends React.Component {
       axios.get(`/ws/reports/name/${reportName}`)
         .then(res => {
           const result = res.data;
-          this.setState({
-            reportId: result.id,
-            name: result.name,
-            style: result.style
-          }, () => {
-            this.refresh();
-          });
-        });
-    });
-  }
-
-  loadViewByShareKey = () => {
-    const url = this.props.location.search;
-    const params = new URLSearchParams(url);
-    const shareKey = params.get('$shareKey');
-    const reportViewWidth = this.getPageWidth();
-    this.setState({
-      isFullScreenView: true,
-      reportViewWidth: reportViewWidth,
-      reportType: Constants.ADHOC
-    }, () => {
-      // MAYBE: support canned report? can only handle Adhoc report for now.
-      axios.get(`/ws/reports/sharekey/${shareKey}`)
-        .then(res => {
-          const result = res.data;
-          if (!result) {
-            toast.error('The report is no longer available.');
-            return;
-          }
           this.setState({
             reportId: result.id,
             name: result.name,
@@ -574,46 +537,7 @@ class ReportEditView extends React.Component {
       });
   }
 
-  openSharePanel = () => {
-    this.setState({
-      showSharePanel: true,
-      shareUrl: '',
-      expiredBy: new Date(),
-    });
-  }
-
-  generateShareUrl = () => {
-    const {
-      reportId,
-      reportType,
-      expiredBy
-    } = this.state;
-
-    const sharedReport = {
-      reportId: reportId,
-      reportType: reportType,
-      expiredBy: Math.round((expiredBy).getTime())
-    }
-
-    const href = window.location.href;
-    const start = href.indexOf('/poli/workspace');
-    if (start === -1) {
-      toast.error('Cannot find poli workspace URL pattern.');
-      return;
-    }
-    const urlPrefix = href.substring(0, start);
-    
-    axios.post('/ws/sharedreports/generate-sharekey', sharedReport)
-      .then(res => {
-        const shareKey = res.data;
-        const shareUrl = urlPrefix + `/poli/workspace/report/fullscreen?$shareKey=${shareKey}`;
-        this.setState({
-          shareUrl: shareUrl
-        });
-      });
-  }
-
-  onDatePickerChange = (name, date) => { 
+  onDatePickerChange = (name, date) => {
     this.setState({
       [name]: date
     });
@@ -827,39 +751,6 @@ class ReportEditView extends React.Component {
           <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
         </Modal>
 
-        <Modal 
-          show={this.state.showSharePanel}
-          onClose={() => this.setState({ showSharePanel: false })}
-          modalClass={'small-modal-panel'}
-          title={t('Share')}>
-          <div className="form-panel">
-            <label>{t('Name')}</label>
-            <div className="form-input bg-grey">{this.state.name}</div>
-
-            <label>{t('Type')}</label>
-            <div className="form-input bg-grey">{this.state.reportType}</div>
-
-            <label style={{marginBottom: '3px'}}>{t('Expiration Date')}</label>
-            <div style={{marginBottom: '8px'}}>
-              <DatePicker 
-                name={'expiredBy'}
-                value={this.state.expiredBy}
-                onChange={this.onDatePickerChange}
-                readOnly={false}
-              />
-            </div>
-
-            { this.state.shareUrl && (
-              <React.Fragment>
-                <label>{t('Share URL')}</label>
-                <div className="form-input word-break-all bg-grey">{this.state.shareUrl}</div>
-              </React.Fragment>
-            )}
-
-            <button className="button button-green full-width" onClick={this.generateShareUrl}>{t('Generate URL')}</button>
-          </div>
-        </Modal>
-
         {isEditMode && (
           <div className="report-side-panel">
             <div className="side-panel-content" style={{margin: '3px 0px'}}>
@@ -987,9 +878,6 @@ class ReportEditView extends React.Component {
             </button>
             <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
               <FontAwesomeIcon icon="archive" title={t('Save Canned Report')}  fixedWidth />
-            </button>
-            <button className="button square-button button-transparent ml-4" onClick={this.openSharePanel}>
-              <FontAwesomeIcon icon="share-square" title={t('Share')} fixedWidth />
             </button>
             <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
               <FontAwesomeIcon icon="tv" title={t('Show')}  fixedWidth />

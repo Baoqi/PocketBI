@@ -27,7 +27,6 @@ public abstract class AbstractWsTest {
     public static final String REPORTS_BASE_URL = "/ws/reports";
     public static final String USERS_BASE_URL = "/ws/users";
     public static final String GROUPS_BASE_URL = "/ws/groups";
-    public static final String SHAREDREPORTS_BASE_URL = "/ws/sharedreports";
     public static final String COMPONENTS_BASE_URL = "/ws/components";
     public static final String JDBCDATASOURCES_BASE_URL = "/ws/jdbcdatasources";
 

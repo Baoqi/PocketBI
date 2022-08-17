@@ -15,7 +15,6 @@ public final class Constants {
 
     public static final String API_KEY_PREFIX = "apk_";
     public static final String SESSION_KEY_PREFIX = "sk_";
-    public static final String SHARE_KEY_PREFIX = "sha_";
 
     public static final String PASSWORD_SALT = "awesome";
 
@@ -47,7 +46,6 @@ public final class Constants {
     public static final String HTTP_METHOD_DELETE = "DELETE";
 
     public static final String HTTP_HEADER_API_KEY = "Poli-Api-Key";
-    public static final String HTTP_HEADER_SHARE_KEY = "Poli-Share-Key";
 
     public static final String ERROR_NO_DATA_SOURCE_FOUND = "No data source found";
     public static final String ERROR_EMPTY_SQL_QUERY = "SQL query cannot be empty";

@@ -11,7 +11,6 @@ import Account from './Account';
 import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';
 import Studio from './Studio/Studio';
-import SharedReportView from './Event/SharedReportView';
 
 import * as Constants from '../api/Constants';
 import { withRouter } from '../components/routing/RouterUtil';
@@ -46,16 +45,6 @@ const MENU_ITEMS = [
       {
         link: '/workspace/user',
         value: 'User',
-      }
-    ]
-  },
-  {
-    value: 'Event',
-    icon: 'search-location',
-    dropdowns: [
-      {
-        link: '/workspace/sharedreport',
-        value: 'Shared Reports',
       }
     ]
   }
@@ -252,7 +241,6 @@ class Workspace extends React.Component {
             <Route exact path="report/fullscreen" element={<ReportFullScreenView />} />
             <Route exact path="group" element={<Group />} />
             <Route exact path="user" element={<User {...this.props} />} />
-            <Route exact path="sharedreport" element={<SharedReportView />} />
             <Route exact path="studio" element={<Studio />} />
             <Route path="report/*" element={<Report {...this.props} />} />
             <Route element={<PageNotFound />} />

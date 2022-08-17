@@ -4,14 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shzlw.poli.config.AppProperties;
 import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.ReportDao;
-import com.shzlw.poli.dao.SharedReportDao;
 import com.shzlw.poli.dao.UserFavouriteDao;
 import com.shzlw.poli.model.Report;
-import com.shzlw.poli.model.SharedReport;
 import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.ReportService;
-import com.shzlw.poli.service.SharedReportService;
-import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -39,13 +33,7 @@ public class ReportWs {
     ReportService reportService;
 
     @Autowired
-    SharedReportDao sharedReportDao;
-
-    @Autowired
     UserFavouriteDao userFavouriteDao;
-
-    @Autowired
-    SharedReportService sharedReportService;
 
     @Autowired
     AppProperties appProperties;
@@ -84,21 +72,6 @@ public class ReportWs {
         return reports.stream().filter(d -> d.getName().equals(name)).findFirst().orElse(null);
     }
 
-    @RequestMapping(value = "/sharekey/{shareKey}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Transactional(readOnly = true)
-    public Report findOneBySharekey(@PathVariable("shareKey") String shareKey) {
-        SharedReport sharedReport = sharedReportDao.findByShareKey(shareKey);
-        if (sharedReport == null) {
-            return null;
-        }
-
-        if (sharedReport.getExpiredBy() < CommonUtils.toEpoch(LocalDateTime.now())) {
-            return null;
-        }
-
-        return reportDao.findById(sharedReport.getReportId());
-    }
-
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody Report report,
@@ -125,8 +98,6 @@ public class ReportWs {
                                     HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         reportService.invalidateCache(user.getId());
-        sharedReportService.invalidateSharedLinkInfoCacheByReportId(reportId);
-        sharedReportDao.deleteByReportId(reportId);
         userFavouriteDao.deleteByReportId(reportId);
         componentDao.deleteByReportId(reportId);
         reportDao.delete(reportId);
