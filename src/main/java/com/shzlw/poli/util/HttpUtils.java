@@ -22,12 +22,4 @@ public final class HttpUtils {
         }
         return null;
     }
-
-    public static String getIpAddress(HttpServletRequest httpRequest) {
-        String ipAddress = httpRequest.getHeader("X-FORWARDED-FOR");
-        if (ipAddress == null) {
-            ipAddress = httpRequest.getRemoteAddr();
-        }
-        return ipAddress;
-    }
 }

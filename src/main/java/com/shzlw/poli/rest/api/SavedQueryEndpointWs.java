@@ -3,7 +3,6 @@ package com.shzlw.poli.rest.api;
 import com.shzlw.poli.dao.SavedQueryDao;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.model.SavedQuery;
-import com.shzlw.poli.service.AuditLogService;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +31,12 @@ public class SavedQueryEndpointWs {
     @Autowired
     JdbcQueryService jdbcQueryService;
 
-    @Autowired
-    AuditLogService auditLogService;
-
     @RequestMapping(value = "/saved-queries", method = RequestMethod.GET)
     @Transactional
     public ResponseEntity<String> getSavedQuery(@RequestParam("name") String name,
                                                @RequestParam(name = "accessCode", required = false, defaultValue = "") String accessCode,
                                                @RequestParam(name = "contentType", required = false, defaultValue = "") String contentType,
                                                HttpServletRequest request) {
-
-        auditLogService.logQueryEndpointAccess(request, name);
 
         SavedQuery savedQuery = savedQueryDao.findByEndpointName(name);
         if (savedQuery == null) {

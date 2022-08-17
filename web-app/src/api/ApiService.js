@@ -17,16 +17,6 @@ export const runQuery = async (jdbcDataSourceId, sqlQuery, resultLimit = 100) =>
   return await httpPost('/ws/jdbcquery/query', requestBody);
 }
 
-export const fetchAuditLogs = async (page, pageSize, searchValue) => {
-  const parameters = {
-    search: searchValue,
-    page,
-    size: pageSize
-  };
-
-  return await httpGet('/ws/audit-logs', parameters);
-}
-
 export const fetchSavedQueries = async (page, pageSize, searchValue) => {
   const parameters = {
     search: searchValue,
