@@ -23,8 +23,7 @@ public final class AuthFilterHelper {
     private static final List<String> VIEWER_POST_PATH = Arrays.asList(
             "/ws/jdbcquery",
             "/ws/cannedreports",
-            "/ws/reports/favourite",
-            "/ws/reports/pdf"
+            "/ws/reports/favourite"
     );
 
     private static final List<String> VIEWER_DELETE_PATH = Arrays.asList(

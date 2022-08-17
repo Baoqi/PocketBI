@@ -34,7 +34,6 @@ class ReportEditView extends React.Component {
       showCannedReportPanel: false,
       showControl: true,
       showSharePanel: false,
-      showExportToPdfPanel: false,
       showFunctionButtonDialog: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
@@ -57,10 +56,7 @@ class ReportEditView extends React.Component {
       cannedReportData: {},
       // share url
       expiredBy: new Date(),
-      shareUrl: '',
-      // export to pdf
-      pdfName: '',
-      isExporting: false
+      shareUrl: ''
     }
 
     this.componentViewPanel = React.createRef();
@@ -391,57 +387,6 @@ class ReportEditView extends React.Component {
     window.open(url, '_blank');
   }
 
-  exportToPdf = () => {
-    const { 
-      reportId,
-      name,
-      style,
-      pdfName
-    } = this.state;
-    const viewWidth = style.isFixedWidth ? style.fixedWidth : 1200;
-    const width = parseInt(viewWidth, 10) + 50;
-    const height = parseInt(style.height, 10) + 50;
-    const exportInfo = {
-      reportId: reportId,
-      reportName: name,
-      width: width,
-      height: height
-    }
-
-    this.setState({ 
-      showExportToPdfPanel: false,
-      isExporting: true
-    });
-
-    axios.post('/ws/reports/pdf', exportInfo,
-      {
-        responseType: 'arraybuffer',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/pdf'
-        }
-      })
-      .then(res => {
-        const pdfData = res.data;
-        const filename = pdfName + '.pdf';
-        const blob = new Blob([pdfData]);
-        const link = document.createElement("a");
-        if (link.download !== undefined) { 
-          const url = URL.createObjectURL(blob);
-          link.setAttribute("href", url);
-          link.setAttribute("download", filename);
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-
-        this.setState({
-          isExporting: false
-        });
-      });
-  }
-
   handleStyleValueChange = (name, value) => {
     const style = {...this.state.style};
     style[[name]] = value;
@@ -634,14 +579,6 @@ class ReportEditView extends React.Component {
       showSharePanel: true,
       shareUrl: '',
       expiredBy: new Date(),
-    });
-  }
-
-  openExportToPdfPanel = () => {
-    const { name } = this.state;
-    this.setState({
-      showExportToPdfPanel: true,
-      pdfName: name,
     });
   }
 
@@ -923,25 +860,6 @@ class ReportEditView extends React.Component {
           </div>
         </Modal>
 
-        <Modal 
-          show={this.state.showExportToPdfPanel}
-          onClose={() => this.setState({ showExportToPdfPanel: false })}
-          modalClass={'small-modal-panel'}
-          title={t('Export To PDF')}>
-          <div className="form-panel">
-            <label>{t('Name')}</label>
-            <input 
-              className="form-input"
-              type="text" 
-              name="pdfName" 
-              value={this.state.pdfName}
-              onChange={(event) => this.handleInputChange('pdfName', event.target.value)} 
-            />
-
-            <button className="button button-green full-width" onClick={this.exportToPdf}>{t('Export')}</button>
-          </div>
-        </Modal>
-
         {isEditMode && (
           <div className="report-side-panel">
             <div className="side-panel-content" style={{margin: '3px 0px'}}>
@@ -1075,9 +993,6 @@ class ReportEditView extends React.Component {
             </button>
             <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
               <FontAwesomeIcon icon="tv" title={t('Show')}  fixedWidth />
-            </button>
-            <button className="button square-button button-transparent ml-4" onClick={this.openExportToPdfPanel}>
-              <FontAwesomeIcon icon="file-pdf" title={t('Export To PDF')} fixedWidth />
             </button>
           </div>
         </DropdownDialog>

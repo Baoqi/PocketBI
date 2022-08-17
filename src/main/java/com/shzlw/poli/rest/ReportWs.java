@@ -6,18 +6,14 @@ import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.ReportDao;
 import com.shzlw.poli.dao.SharedReportDao;
 import com.shzlw.poli.dao.UserFavouriteDao;
-import com.shzlw.poli.dto.ExportRequest;
 import com.shzlw.poli.model.Report;
 import com.shzlw.poli.model.SharedReport;
 import com.shzlw.poli.model.User;
-import com.shzlw.poli.service.HttpClient;
 import com.shzlw.poli.service.ReportService;
 import com.shzlw.poli.service.SharedReportService;
 import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +46,6 @@ public class ReportWs {
 
     @Autowired
     SharedReportService sharedReportService;
-
-    @Autowired
-    HttpClient httpClient;
 
     @Autowired
     AppProperties appProperties;
@@ -161,37 +154,5 @@ public class ReportWs {
     public List<Report> findAllFavourites(HttpServletRequest request) {
         User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
         return reportDao.findFavouritesByUserId(user.getId());
-    }
-
-    @RequestMapping(
-            value = "/pdf",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_PDF_VALUE)
-    @Transactional(readOnly = true)
-    public ResponseEntity<?> exportToPdf(@RequestBody ExportRequest exportRequest,
-                                         HttpServletRequest request) {
-
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        exportRequest.setSessionKey(user.getSessionKey());
-
-        try {
-            byte[] pdfData = httpClient.postJson(appProperties.getExportServerUrl(), mapper.writeValueAsString(exportRequest));
-            ByteArrayResource resource = new ByteArrayResource(pdfData);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + exportRequest.getReportName() + ".pdf");
-            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-            headers.add("Pragma", "no-cache");
-            headers.add("Expires", "0");
-
-            return ResponseEntity
-                    .ok()
-                    .headers(headers)
-                    .contentLength(pdfData.length)
-                    .contentType(MediaType.parseMediaType("application/octet-stream"))
-                    .body(resource);
-        } catch (IOException e) {
-            return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-        }
     }
 }

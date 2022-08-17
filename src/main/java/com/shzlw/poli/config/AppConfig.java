@@ -1,7 +1,6 @@
 package com.shzlw.poli.config;
 
 import com.shzlw.poli.filter.AuthFilter;
-import okhttp3.OkHttpClient;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,14 +32,5 @@ public class AppConfig implements WebMvcConfigurer {
         registration.setAsyncSupported(Boolean.TRUE);
         registration.setEnabled(Boolean.TRUE);
         return registration;
-    }
-
-    @Bean
-    public OkHttpClient okHttpClient() {
-        return new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .build();
     }
 }
