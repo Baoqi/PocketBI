@@ -39,29 +39,8 @@ public final class AuthFilterHelper {
         VIEWER_MAP = Collections.unmodifiableMap(viewerTemp);
     }
 
-    private static final List<String> APIKEY_GET_PATH = Arrays.asList(
-            "/ws/reports",
-            "/ws/cannedreports",
-            "/ws/components/report/"
-    );
-    private static final List<String> APIKEY_POST_PATH = Arrays.asList(
-            "/ws/jdbcquery/component"
-    );
-
-    private static final Map<String, List<String>> APIKEY_MAP;
-    static {
-        Map<String, List<String>> apikeyTemp = new HashMap<>();
-        apikeyTemp.put(Constants.HTTP_METHOD_GET, APIKEY_GET_PATH);
-        apikeyTemp.put(Constants.HTTP_METHOD_POST, APIKEY_POST_PATH);
-        APIKEY_MAP = Collections.unmodifiableMap(apikeyTemp);
-    }
-
     public static boolean validateViewer(String requestMethod, String path) {
         return isPathStartWith(path, VIEWER_MAP.get(requestMethod));
-    }
-
-    public static boolean validateByApiKey(String requestMethod, String path) {
-        return isPathStartWith(path, APIKEY_MAP.get(requestMethod));
     }
 
     private static boolean isPathStartWith(String path, List<String> startWithList) {

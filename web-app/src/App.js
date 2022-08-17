@@ -64,34 +64,8 @@ class App extends React.Component {
     const search = this.props.location.search;
     const currentPath = pathname + search;
 
-    const params = new URLSearchParams(search);
-    const apiKey = params.get('$apiKey');
-    const isFullScreenView = pathname.indexOf('/workspace/report/fullscreen') !== -1;
-    if (isFullScreenView) {
-      // Only allow using ApiKey in fullscreen view.
-      if (apiKey !== null) {
-        const loginRequest = {
-          apiKey: apiKey
-        };
-        this.setState({
-          isAuthorizing: true
-        }, () => {
-          axios.post('/auth/login/apikey', loginRequest)
-            .then(res => {
-              axios.defaults.headers.common = {
-                "Poli-Api-Key": apiKey
-              };
-              this.handleLoginResponse(res.data, currentPath);
-            });
-        });
-        return;   
-      }
-    } else {
-      delete axios.defaults.headers.common['Poli-Api-Key'];
-    }
-    
     const rememberMeConfig = localStorage.getItem(Constants.REMEMBERME);
-    const rememberMe = (rememberMeConfig && rememberMeConfig === Constants.YES) || isFullScreenView;
+    const rememberMe = rememberMeConfig && rememberMeConfig === Constants.YES;
 
     const {
       sysRole

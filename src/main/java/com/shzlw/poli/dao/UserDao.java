@@ -68,19 +68,8 @@ public class UserDao {
         }
     }
 
-    public User findByApiKey(String apiKey) {
-        String sql = "SELECT id, username, name, sys_role, session_key "
-                    + "FROM p_user WHERE api_key=?";
-        try {
-            User user = (User) jt.queryForObject(sql, new Object[]{ apiKey }, new UserSesssionKeyMapper());
-            return user;
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
     public User findAccount(long id) {
-        String sql = "SELECT id, username, name, sys_role, api_key "
+        String sql = "SELECT id, username, name, sys_role "
                     + "FROM p_user WHERE id=?";
         try {
             User user = (User) jt.queryForObject(sql, new Object[]{ id }, new UserAccountMapper());
@@ -91,7 +80,7 @@ public class UserDao {
     }
 
     public User findAccountBySessionKey(String sessionKey) {
-        String sql = "SELECT id, username, name, sys_role, api_key "
+        String sql = "SELECT id, username, name, sys_role "
                     + "FROM p_user WHERE session_key=?";
         try {
             User user = (User) jt.queryForObject(sql, new Object[]{ sessionKey }, new UserAccountMapper());
@@ -118,10 +107,6 @@ public class UserDao {
         return jt.update(sql, new Object[] { sessionKey, sessionTimeout, userId});
     }
 
-    public int updateApiKey(long userId, String apiKey) {
-        String sql = "UPDATE p_user SET api_key=? WHERE id=?";
-        return jt.update(sql, new Object[] { apiKey, userId });
-    }
 
     public int updateTempPassword(long userId, String rawNewPassword) {
         String encryptedPassword = PasswordUtils.getMd5Hash(rawNewPassword);
@@ -280,7 +265,6 @@ public class UserDao {
             r.setUsername(rs.getString(User.USERNAME));
             r.setName(rs.getString(User.NAME));
             r.setSysRole(rs.getString(User.SYS_ROLE));
-            r.setApiKey(rs.getString(User.API_KEY));
             return r;
         }
     }

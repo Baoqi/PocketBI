@@ -15,7 +15,6 @@ public class User {
     public static final String SESSION_KEY = "session_key";
     public static final String SESSION_TIMEOUT = "session_timeout";
     public static final String SYS_ROLE = "sys_role";
-    public static final String API_KEY = "api_key";
 
     private long id;
     private String username;
@@ -25,7 +24,6 @@ public class User {
     private String sessionKey;
     private LocalDateTime sessionTimeout;
     private String sysRole;
-    private String apiKey;
 
     private List<Long> userGroups = new ArrayList<>();
 
@@ -97,14 +95,6 @@ public class User {
         this.sysRole = sysRole;
     }
 
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
     public List<Long> getUserGroups() {
         return userGroups;
     }
@@ -145,7 +135,6 @@ public class User {
                 ", password='" + password + '\'' +
                 ", sessionTimeout=" + sessionTimeout +
                 ", sysRole='" + sysRole + '\'' +
-                ", apiKey='" + apiKey + '\'' +
                 '}';
     }
 }

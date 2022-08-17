@@ -26,14 +26,6 @@ public class UserService {
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
-    /**
-     * Key: Api key
-     * Value: User
-     */
-    private static final Cache<String, User> API_KEY_USER_CACHE = CacheBuilder.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build();
-
     @Autowired
     UserDao userDao;
 
@@ -54,23 +46,6 @@ public class UserService {
         }
     }
 
-    public User getUserByApiKey(String apiKey) {
-        if (StringUtils.isEmpty(apiKey)) {
-            return null;
-        }
-
-        try {
-            User user = API_KEY_USER_CACHE.get(apiKey, () -> {
-                User u = userDao.findByApiKey(apiKey);
-                u.setUserAttributes(userDao.findUserAttributes(u.getId()));
-                return u;
-            });
-            return user;
-        } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
-            return null;
-        }
-    }
-
     public void newOrUpdateUser(User user, String oldSessionKey, String newSessionKey) {
         invalidateSessionUserCache(oldSessionKey);
         SESSION_USER_CACHE.put(newSessionKey, user);
@@ -82,9 +57,4 @@ public class UserService {
         }
     }
 
-    public void invalidateApiKeyUserCache(String apiKey) {
-        if (apiKey != null) {
-            API_KEY_USER_CACHE.invalidate(apiKey);
-        }
-    }
 }

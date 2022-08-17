@@ -12,13 +12,11 @@ class Account extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showGenerateApiKeyPanel: false,
       showUpdatePassword: false,
       id: null,
       username: '',
       name: '',
       sysRole: '',
-      apiKey: '',
       password: '',
       confirmedPassword: ''
     };
@@ -42,23 +40,9 @@ class Account extends React.Component {
           id: user.id,
           username: user.username,
           name: user.name,
-          sysRole: user.sysRole,
-          apiKey: user.apiKey
+          sysRole: user.sysRole
         });
       });
-  }
-
-  generateApiKey = () => {
-    axios.get('/auth/generate-apikey')
-      .then(res => {
-        const apiKey = res.data;
-        this.setState({
-          apiKey: apiKey
-        });
-      });
-    this.setState({
-      showGenerateApiKeyPanel: false
-    })
   }
 
   save = () => {
@@ -105,8 +89,7 @@ class Account extends React.Component {
     const {
       showUpdatePassword,
       username,
-      sysRole,
-      apiKey
+      sysRole
     } = this.state;
 
     return (
@@ -127,10 +110,6 @@ class Account extends React.Component {
           <label>{t('System Role')}</label>
           <div className="form-input bg-grey">{sysRole}</div>
 
-          <label>{t('API Key')}</label>
-          <div className="form-input bg-grey">{apiKey}</div>
-          <button className="button mt-10 button-red" onClick={() => this.setState({ showGenerateApiKeyPanel: true })}>{t('Generate new API Key')}</button>
-          
           <hr />
 
           <button className="button mt-3" onClick={this.toggleUpdatePassword}>{t('Change Password')}</button>
@@ -160,16 +139,6 @@ class Account extends React.Component {
           </button>
         </div>
 
-        <Modal 
-          show={this.state.showGenerateApiKeyPanel}
-          onClose={() => this.setState({ showGenerateApiKeyPanel: false })}
-          modalClass={'small-modal-panel'}
-          title={t('Confirm')} >
-          <div className="confirm-deletion-panel">
-            {t('Are you sure you want to generate a new Api Key')}?
-          </div>
-          <button className="button button-red full-width" onClick={this.generateApiKey}>{t('Confirm')}</button>
-        </Modal>
       </div>
     )
   }

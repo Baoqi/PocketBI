@@ -14,7 +14,6 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Set;
 
 @Component
 @Order(1)
@@ -35,8 +34,7 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        if (authBySessionKey(httpRequest, path)
-            || authByApiKey(httpRequest, path)) {
+        if (authBySessionKey(httpRequest, path)) {
             chain.doFilter(request, response);
             return;
         }
@@ -67,21 +65,6 @@ public class AuthFilter implements Filter {
             isValid = false;
         }
         return isValid;
-    }
-
-    private boolean authByApiKey(HttpServletRequest httpRequest, String path) {
-        String apiKey = httpRequest.getHeader(Constants.HTTP_HEADER_API_KEY);
-        if (apiKey == null) {
-            return false;
-        }
-
-        User user = userService.getUserByApiKey(apiKey);
-        if (user == null) {
-            return false;
-        }
-
-        httpRequest.setAttribute(Constants.HTTP_REQUEST_ATTR_USER, user);
-        return AuthFilterHelper.validateByApiKey(httpRequest.getMethod(), path);
     }
 
     protected void return401(ServletResponse response) throws IOException {

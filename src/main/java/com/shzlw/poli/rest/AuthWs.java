@@ -28,7 +28,6 @@ public class AuthWs {
 
     public static final String INVALID_USERNAME_PASSWORD = "Invalid username or password.";
     public static final String USE_MORE_CHARACTERS = "Use 8 or more characters.";
-    public static final String INVALID_API_KEY = "Invalid api key.";
 
     @RequestMapping(value="/login/user", method = RequestMethod.POST)
     @Transactional
@@ -78,18 +77,6 @@ public class AuthWs {
         return LoginResponse.ofSuccess(user.getUsername(), user.getSysRole(), false);
     }
 
-    @RequestMapping(value="/login/apikey", method= RequestMethod.POST)
-    @Transactional
-    public LoginResponse loginByApiKey(@RequestBody User loginInfo) {
-        String apiKey = loginInfo.getApiKey();
-        User user = userDao.findByApiKey(apiKey);
-        if (user == null) {
-            return LoginResponse.ofError(INVALID_API_KEY);
-        }
-
-        return LoginResponse.ofSuccess(user.getUsername(), user.getSysRole(), false);
-    }
-
     @RequestMapping(value="/logout", method= RequestMethod.GET)
     @Transactional
     public void logout(@CookieValue(Constants.SESSION_KEY) String sessionKey, HttpServletResponse response) throws IOException {
@@ -121,16 +108,6 @@ public class AuthWs {
 
         userDao.updateTempPassword(existUser.getId(), user.getPassword());
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @RequestMapping(value="/generate-apikey", method= RequestMethod.GET)
-    @Transactional
-    public ResponseEntity<String> generateApiKey(@CookieValue(value = Constants.SESSION_KEY, defaultValue = "") String sessionKey) {
-        User user = userDao.findAccountBySessionKey(sessionKey);
-        userService.invalidateApiKeyUserCache(user.getApiKey());
-        String apiKey = Constants.API_KEY_PREFIX + PasswordUtils.getUniqueId();
-        userDao.updateApiKey(user.getId(), apiKey);
-        return new ResponseEntity<>(apiKey, HttpStatus.OK);
     }
 
     private static String getNewSessionKey() {

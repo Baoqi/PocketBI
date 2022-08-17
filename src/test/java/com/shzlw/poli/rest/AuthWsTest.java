@@ -104,42 +104,4 @@ public class AuthWsTest extends AbstractWsTest {
         loginResponse = mapper.readValue(responeText, LoginResponse.class);
         Assert.assertEquals(AuthWs.USE_MORE_CHARACTERS, loginResponse.getError());
     }
-
-    @Test
-    public void testGenerateApiKey() throws Exception {
-        LoginResponse loginResponse = loginAsAdmin();
-        mvcResult = this.mvc.perform(
-                get("/auth/generate-apikey").cookie(cookies))
-                .andExpect(status().isOk())
-                .andReturn();
-        responeText = mvcResult.getResponse().getContentAsString();
-        Assert.assertTrue(responeText.startsWith(Constants.API_KEY_PREFIX));
-    }
-
-    @Test
-    public void testLoginByApiKey() throws Exception {
-        LoginResponse loginResponse1 = loginAsAdmin();
-        mvcResult = this.mvc.perform(
-                get("/auth/generate-apikey").cookie(cookies))
-                .andExpect(status().isOk())
-                .andReturn();
-        String apiKey = mvcResult.getResponse().getContentAsString();
-
-        // Build the login request
-        User loginRequest = new User();
-        loginRequest.setApiKey(apiKey);
-        mvcResult = mvc.perform(
-                post("/auth/login/apikey")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(loginRequest))
-        )
-                .andReturn();
-        responeText = mvcResult.getResponse().getContentAsString();
-        LoginResponse loginResponse2 = mapper.readValue(responeText, LoginResponse.class);
-
-        // Verify
-        Assert.assertEquals(loginResponse1.getUsername(), loginResponse2.getUsername());
-        Assert.assertNotNull(loginResponse1.getSysRole(), loginResponse2.getSysRole());
-        Assert.assertNull(loginResponse2.getError());
-    }
 }
