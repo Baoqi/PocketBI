@@ -194,7 +194,7 @@ class GridItem extends React.PureComponent {
       return (<div>{error}</div>);
     }
 
-    const isReadOnly = reportType === Constants.CANNED;
+    const isReadOnly = reportType !== Constants.ADHOC;
     
     let componentItem = (<div></div>);
     if (type === Constants.CHART) {

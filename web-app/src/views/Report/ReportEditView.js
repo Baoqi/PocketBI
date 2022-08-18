@@ -12,7 +12,6 @@ import ComponentEditPanel from './ComponentEditPanel';
 import Modal from '../../components/Modal/Modal';
 import ColorPicker from '../../components/ColorPicker/ColorPicker';
 import Checkbox from '../../components/Checkbox/Checkbox';
-import DropdownDialog from '../../components/DropdownDialog/DropdownDialog';
 import { withRouter } from '../../components/routing/RouterUtil';
 
 import * as Constants from '../../api/Constants';
@@ -30,9 +29,7 @@ class ReportEditView extends React.Component {
       // Modal
       showComponentEditPanel: false,
       showConfirmDeletionPanel: false,
-      showCannedReportPanel: false,
       showControl: true,
-      showFunctionButtonDialog: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
       isEditMode: false,
@@ -48,9 +45,7 @@ class ReportEditView extends React.Component {
       project: '',
       style: {},
       reportType: '',
-      reportViewWidth: 1000,
-      cannedReportName: '',
-      cannedReportData: {}
+      reportViewWidth: 1000
     }
 
     this.componentViewPanel = React.createRef();
@@ -105,21 +100,6 @@ class ReportEditView extends React.Component {
                 this.refresh();
               });
             });
-        } else if (reportType === Constants.CANNED) {
-          axios.get(`/ws/cannedreports/${reportId}`)
-            .then(res => {
-              const cannedReport = res.data;
-              const { data: report } = cannedReport; 
-              this.setState({
-                reportId: cannedReport.id,
-                name: report.name,
-                style: report.style,
-                reportType: reportType,
-                cannedReportData: report
-              }, () => {
-                this.refresh();
-              });
-            });
         }
         
       }
@@ -166,8 +146,9 @@ class ReportEditView extends React.Component {
     showControl = showControl === null ? true : showControl === 'true';
     const fromReport = params.get('$fromReport');
     const reportName = params.get('$toReport');
-    let reportType = params.get('$reportType');
-    reportType = reportType === Constants.CANNED ? Constants.CANNED : Constants.ADHOC;
+    //let reportType = params.get('$reportType');
+    //reportType = reportType === Constants.CANNED ? Constants.CANNED : Constants.ADHOC;
+    let reportType = Constants.ADHOC;
     const reportViewWidth = this.getPageWidth();
 
     this.setState({
@@ -233,17 +214,11 @@ class ReportEditView extends React.Component {
     const { 
       reportId,
       reportViewWidth,
-      reportType,
-      cannedReportData
+      reportType
     } = this.state;
 
     if (reportType === Constants.ADHOC) {
       this.componentViewPanel.current.fetchComponents(reportId, reportViewWidth, this.getUrlFilterParams());
-    } else if (reportType === Constants.CANNED) {
-      const { 
-        components = []
-      } = cannedReportData;
-      this.componentViewPanel.current.buildViewPanel(components, reportViewWidth, false);
     }
   }
 
@@ -332,8 +307,6 @@ class ReportEditView extends React.Component {
     } = this.state;
     if (reportType === Constants.ADHOC) {
       this.componentViewPanel.current.queryCharts(this.getUrlFilterParams());
-    } else if (reportType === Constants.CANNED) {
-      // TODO: query local data.
     }
     this.setState({
       isPendingApplyFilters: false
@@ -343,7 +316,7 @@ class ReportEditView extends React.Component {
 
   fullScreen = () => {
     const { name } = this.state;
-    const url = `/workspace/report/fullscreen?$toReport=${name}`;
+    const url = `/poli/workspace/report/fullscreen?$toReport=${name}`;
     window.open(url, '_blank');
   }
 
@@ -428,12 +401,6 @@ class ReportEditView extends React.Component {
           this.props.onReportDelete(reportId);
           this.closeConfirmDeletionPanel();
         });
-    } else if (reportType === Constants.CANNED) {
-      axios.delete(`/ws/cannedreports/${reportId}`)
-        .then(res => {
-          this.props.onCannedReportDelete(reportId);
-          this.closeConfirmDeletionPanel();
-        });
     }
   }
 
@@ -479,44 +446,6 @@ class ReportEditView extends React.Component {
     }
     return urlFilterParams;
   }
-
-  saveCannedReport = () => {
-    const {
-      cannedReportName,
-      style = {}
-    } = this.state;
-
-    if (!cannedReportName) {
-      toast.error('Enter a name.');
-      return;
-    }
-
-    const components = this.componentViewPanel.current.getComponentsSnapshot();
-    if (Util.isArrayEmpty(components)) {
-      toast.error('Report is empty.');
-      return;
-    }
-
-    const report = {
-      name: cannedReportName,
-      data: {
-        name: cannedReportName,
-        style: style,
-        components: components
-      }
-    };
-
-    axios.post('/ws/cannedreports', report)
-      .then(res => {
-        this.setState({
-          showCannedReportPanel: false,
-          cannedReportName: ''
-        });
-        toast.success('Saved.');
-        this.props.onCannedReportSave();
-      });
-  }
-  
 
   onDatePickerChange = (name, date) => {
     this.setState({
@@ -582,8 +511,8 @@ class ReportEditView extends React.Component {
     // buttons not displayed in full screen view.
     const fullScreenExcludeButtonPanel = (
       <React.Fragment>
-        <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showFunctionButtonDialog: true })}>
-          <FontAwesomeIcon icon="ellipsis-h"  fixedWidth />
+        <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
+          <FontAwesomeIcon icon="tv" title={t('Show')}  fixedWidth />
         </button>
       </React.Fragment>
     );
@@ -628,12 +557,6 @@ class ReportEditView extends React.Component {
               {commonButtonPanel}
               {fullScreenExcludeButtonPanel}
             </React.Fragment>
-          );
-        } else if (reportType === Constants.CANNED) {
-          buttonGroupPanel = (
-            <button className="button square-button button-transparent ml-4" onClick={this.deleteReport}>
-              <FontAwesomeIcon icon="trash-alt"  fixedWidth />
-            </button>
           );
         }
       }
@@ -698,26 +621,6 @@ class ReportEditView extends React.Component {
             reportId={this.state.reportId}
             onSave={this.onComponentSave}
           />
-        </Modal>
-
-        <Modal 
-          show={this.state.showCannedReportPanel}
-          onClose={() => this.setState({ showCannedReportPanel: false })}
-          modalClass={'small-modal-panel'} 
-          title={t('Save Canned Report')} >
-          <div className="form-panel">
-            <label>{t('Name')}</label>
-            <input 
-              className="form-input"
-              type="text" 
-              name="cannedReportName" 
-              value={this.state.cannedReportName}
-              onChange={(event) => this.handleInputChange('cannedReportName', event.target.value)} 
-            />
-            <button className="button button-green" onClick={this.saveCannedReport}>
-              <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
-            </button>
-          </div>
         </Modal>
 
         <Modal 
@@ -843,22 +746,6 @@ class ReportEditView extends React.Component {
             </div>
           </div>
         )}
-
-        <DropdownDialog 
-          show={this.state.showFunctionButtonDialog}
-          onClose={() => this.setState({ showFunctionButtonDialog: false })}
-          >
-          <div className="form-panel">
-            <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
-              <FontAwesomeIcon icon="archive" title={t('Save Canned Report')}  fixedWidth />
-            </button>
-            <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
-              <FontAwesomeIcon icon="tv" title={t('Show')}  fixedWidth />
-            </button>
-          </div>
-        </DropdownDialog>
-        
-
       </React.Fragment>
     )
   };

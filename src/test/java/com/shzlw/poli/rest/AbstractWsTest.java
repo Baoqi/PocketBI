@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public abstract class AbstractWsTest {
 
-    public static final String CANNEDREPORTS_BASE_URL = "/ws/cannedreports";
     public static final String REPORTS_BASE_URL = "/ws/reports";
     public static final String COMPONENTS_BASE_URL = "/ws/components";
     public static final String JDBCDATASOURCES_BASE_URL = "/ws/jdbcdatasources";
