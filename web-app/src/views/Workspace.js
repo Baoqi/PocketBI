@@ -6,7 +6,6 @@ import DataSource from './DataSource';
 import Report from './Report/Report';
 import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';
-import Studio from './Studio/Studio';
 
 import { withRouter } from '../components/routing/RouterUtil';
 import './Workspace.css';
@@ -14,11 +13,6 @@ import './Workspace.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const MENU_ITEMS = [
-  {
-    link: '/workspace/studio',
-    value: 'Studio',
-    icon: 'bolt',
-  }, 
   {
     link: '/workspace/report',
     value: 'Report',
@@ -167,7 +161,6 @@ class Workspace extends React.Component {
           <Routes>
             <Route exact path="datasource" element={<DataSource />} />
             <Route exact path="report/fullscreen" element={<ReportFullScreenView />} />
-            <Route exact path="studio" element={<Studio />} />
             <Route path="report/*" element={<Report {...this.props} />} />
             <Route element={<PageNotFound />} />
           </Routes>

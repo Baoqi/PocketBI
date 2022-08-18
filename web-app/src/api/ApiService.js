@@ -17,17 +17,6 @@ export const runQuery = async (jdbcDataSourceId, sqlQuery, resultLimit = 100) =>
   return await httpPost('/ws/jdbcquery/query', requestBody);
 }
 
-export const fetchSavedQueries = async (page, pageSize, searchValue) => {
-  const parameters = {
-    search: searchValue,
-    page,
-    size: pageSize
-  };
-
-  return await httpGet('/ws/saved-queries', parameters);
-}
-
-
 export const httpGet = async (url, parameters = {}) => {
   try {
     const response = await axios.get(url, {params: parameters});
