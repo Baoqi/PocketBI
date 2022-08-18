@@ -3,9 +3,7 @@ package com.shzlw.poli.rest;
 import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.model.Component;
 import com.shzlw.poli.model.Report;
-import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.ReportService;
-import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,8 +38,7 @@ public class ComponentWs {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findByReportId(@PathVariable("id") long reportId,
                                             HttpServletRequest request) {
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        List<Report> reports = reportService.getReportsByUser(user);
+        List<Report> reports = reportService.getAllReports();
         if (reports.isEmpty()) {
             // No report found.
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);

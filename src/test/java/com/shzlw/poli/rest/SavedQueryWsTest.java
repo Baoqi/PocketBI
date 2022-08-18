@@ -42,7 +42,6 @@ public class SavedQueryWsTest extends AbstractWsTest {
         mvcResult = mvc.perform(
                 post(SAVEDQUERIES_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isCreated())
@@ -61,7 +60,6 @@ public class SavedQueryWsTest extends AbstractWsTest {
         // Verify the list
         mvcResult = mvc.perform(
                 get(SAVEDQUERIES_BASE_URL)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
@@ -87,7 +85,6 @@ public class SavedQueryWsTest extends AbstractWsTest {
         mvcResult = mvc.perform(
                 put(SAVEDQUERIES_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isOk())
@@ -103,7 +100,6 @@ public class SavedQueryWsTest extends AbstractWsTest {
         // ********** Delete **********
         mvcResult = mvc.perform(
                 delete(SAVEDQUERIES_BASE_URL+ "/" + id)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -115,7 +111,6 @@ public class SavedQueryWsTest extends AbstractWsTest {
     private String findSavedQuery(long id) throws Exception {
         mvcResult = mvc.perform(
                 get(SAVEDQUERIES_BASE_URL+ "/" + id)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         return mvcResult.getResponse().getContentAsString();

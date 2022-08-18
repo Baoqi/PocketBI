@@ -5,13 +5,9 @@ import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryRequest;
 import com.shzlw.poli.dto.QueryResult;
 import com.shzlw.poli.model.Component;
-import com.shzlw.poli.model.Report;
-import com.shzlw.poli.model.User;
-import com.shzlw.poli.model.UserAttribute;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
 import com.shzlw.poli.service.ReportService;
-import com.shzlw.poli.util.CommonUtils;
 import com.shzlw.poli.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -69,60 +64,9 @@ public class JdbcQueryWs {
             return new ResponseEntity(QueryResult.ofError(Constants.ERROR_NO_DATA_SOURCE_FOUND), HttpStatus.OK);
         }
 
-        boolean isAccessValid = isComponentAccessValid(component, request);
-        if (isAccessValid) {
-            String sql = component.getSqlQuery();
-            DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
-            User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-            List<FilterParameter> newFilterParams = addUserAttributesToFilterParams(user.getUserAttributes(), filterParams);
-            QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, sql, newFilterParams, Constants.QUERY_RESULT_NOLIMIT);
-            return new ResponseEntity(queryResult, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-
-    protected boolean isComponentAccessValid(Component component, HttpServletRequest request) {
-        if (component == null) {
-            return false;
-        }
-
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        if (user == null) {
-            return false;
-        }
-
-        List<Report> reports = reportService.getReportsByUser(user);
-        boolean isValid = false;
-        for (Report report : reports) {
-            if (report.getId() == component.getReportId()) {
-                isValid = true;
-                break;
-            }
-        }
-        return isValid;
-    }
-
-    protected List<FilterParameter> addUserAttributesToFilterParams(List<UserAttribute> userAttributes, List<FilterParameter> filterParams) {
-        if (userAttributes == null || userAttributes.isEmpty()) {
-            return filterParams;
-        }
-
-        List<FilterParameter> newFilterParams = new ArrayList<>();
-        for (UserAttribute attr : userAttributes) {
-            // Transform every user attribute to a single value filter param.
-            FilterParameter param = new FilterParameter();
-            param.setType(Constants.FILTER_TYPE_USER_ATTRIBUTE);
-            // For example: $user_attr[division]
-            param.setParam(CommonUtils.getParamByAttrKey(attr.getAttrKey()));
-            param.setValue(attr.getAttrValue());
-            newFilterParams.add(param);
-        }
-
-        if (filterParams != null && !filterParams.isEmpty()) {
-            newFilterParams.addAll(filterParams);
-        }
-
-        return newFilterParams;
+        String sql = component.getSqlQuery();
+        DataSource dataSource = jdbcDataSourceService.getDataSource(component.getJdbcDataSourceId());
+        QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, sql, filterParams, Constants.QUERY_RESULT_NOLIMIT);
+        return new ResponseEntity(queryResult, HttpStatus.OK);
     }
 }

@@ -1,18 +1,13 @@
 import React from 'react';
 import { Route, Routes } from "react-router-dom";
-import axios from 'axios';
 import { withTranslation } from 'react-i18next';
 
 import DataSource from './DataSource';
 import Report from './Report/Report';
-import User from './UserManagement/User';
-import Group from './UserManagement/Group'
-import Account from './Account';
 import ReportFullScreenView from './ReportFullScreenView';
 import PageNotFound from './PageNotFound';
 import Studio from './Studio/Studio';
 
-import * as Constants from '../api/Constants';
 import { withRouter } from '../components/routing/RouterUtil';
 import './Workspace.css';
 
@@ -33,31 +28,14 @@ const MENU_ITEMS = [
     link: '/workspace/datasource',
     value: 'Data Source',
     icon: 'database'
-  }, 
-  {
-    value: 'User Management',
-    icon: 'users-cog',
-    dropdowns: [
-      {
-        link: '/workspace/group',
-        value: 'Group',
-      },
-      {
-        link: '/workspace/user',
-        value: 'User',
-      }
-    ]
   }
 ];
-
-const ACCOUNT_MENU_LINK = '/workspace/account';
 
 class Workspace extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       currentMenuLink: '/workspace/report',
-      showAccountDropdown: false,
       menutItems: MENU_ITEMS
     }
   }
@@ -65,14 +43,10 @@ class Workspace extends React.Component {
   componentDidMount() {
     const pathname = this.props.location.pathname;
     let link = '';
-    if (pathname.startsWith(ACCOUNT_MENU_LINK)) {
-      link = ACCOUNT_MENU_LINK;
-    } else {
-      const { menutItems } = this.state; 
-      const index = menutItems.findIndex(m => pathname.startsWith(m.link));
-      if (index !== -1) {
-        link = menutItems[index].link;
-      }
+    const { menutItems } = this.state;
+    const index = menutItems.findIndex(m => pathname.startsWith(m.link));
+    if (index !== -1) {
+      link = menutItems[index].link;
     }
 
     this.setState({
@@ -103,29 +77,11 @@ class Workspace extends React.Component {
         
       this.setState({
         currentMenuLink: menu.link,
-        menutItems: menutItemsClone,
-        showAccountDropdown: false
+        menutItems: menutItemsClone
       }, () => {
         this.props.navigate(menu.link);
       });
     }
-  }
-
-  logout = () => {
-    axios.get('/auth/logout')
-      .then(res => {
-        this.setState({
-          showAccountDropdown: false
-        }, () => {
-          this.props.onLogout();
-        });
-      });
-  }
-
-  onAccountMenuClick = () => {
-    this.setState(prevState => ({
-      showAccountDropdown: !prevState.showAccountDropdown
-    })); 
   }
 
   goToSubLink = (link) => {
@@ -137,8 +93,7 @@ class Workspace extends React.Component {
       
     this.setState({
       currentMenuLink: '',
-      menutItems: menutItemsClone,
-      showAccountDropdown: false
+      menutItems: menutItemsClone
     }, () => {
       this.props.navigate(link);
     });
@@ -152,8 +107,7 @@ class Workspace extends React.Component {
     }
       
     this.setState({
-      menutItems: menutItemsClone,
-      showAccountDropdown: false
+      menutItems: menutItemsClone
     });
   }
 
@@ -165,18 +119,9 @@ class Workspace extends React.Component {
       menutItems
     } = this.state;
     
-    const {
-      username,
-      sysRole
-    } = this.props;
-
     let menuItems = [];
-    let menuList = [];
-    if (sysRole === Constants.SYS_ROLE_VIEWER) {
-      menuList = menutItems.filter(m => m.link === '/workspace/report');
-    } else {
-      menuList = menutItems;
-    }
+    let menuList = menutItems;
+
     for (let i = 0; i < menuList.length; i++) {
       const menu = menuList[i];
       const active = currentMenuLink === menu.link ? 'menu-item-active' : '';
@@ -217,30 +162,11 @@ class Workspace extends React.Component {
           <div className="workspace-nav-menu">
             {menuItems}
           </div>
-          <div className="workspace-account-menu">
-            <div className="workspace-account-button" onClick={this.onAccountMenuClick}>
-              <FontAwesomeIcon icon="user" fixedWidth />
-              <span className="workspace-nav-menu-text">{username}</span>
-            </div>
-            { this.state.showAccountDropdown && (
-              <div className="workspace-account-dropdown">
-                <div className="workspace-dropdown-button" onClick={() => this.goToSubLink('/workspace/account')}>
-                  {t('Account')}
-                </div>
-                <div className="workspace-dropdown-button" onClick={this.logout}>
-                  {t('Logout')}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
         <div className="workspace-content">
           <Routes>
             <Route exact path="datasource" element={<DataSource />} />
-            <Route exact path="account" element={<Account />} />
             <Route exact path="report/fullscreen" element={<ReportFullScreenView />} />
-            <Route exact path="group" element={<Group />} />
-            <Route exact path="user" element={<User {...this.props} />} />
             <Route exact path="studio" element={<Studio />} />
             <Route path="report/*" element={<Report {...this.props} />} />
             <Route element={<PageNotFound />} />

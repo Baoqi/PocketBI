@@ -2,9 +2,7 @@ package com.shzlw.poli.rest;
 
 import com.shzlw.poli.dao.CannedReportDao;
 import com.shzlw.poli.model.CannedReport;
-import com.shzlw.poli.model.User;
 import com.shzlw.poli.util.CommonUtils;
-import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,16 +44,14 @@ public class CannedReportWs {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public List<CannedReport> getMyReport(HttpServletRequest request) {
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        return cannedReportDao.findByUserId(user.getId());
+        return cannedReportDao.findAll();
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Long> add(@RequestBody CannedReport cannedReport,
                                     HttpServletRequest request) {
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        long id = cannedReportDao.insert(user.getId(),
+        long id = cannedReportDao.insert(
                 CommonUtils.toEpoch(LocalDateTime.now()),
                 cannedReport.getName(),
                 cannedReport.getData());

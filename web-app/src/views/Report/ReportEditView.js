@@ -12,7 +12,6 @@ import ComponentEditPanel from './ComponentEditPanel';
 import Modal from '../../components/Modal/Modal';
 import ColorPicker from '../../components/ColorPicker/ColorPicker';
 import Checkbox from '../../components/Checkbox/Checkbox';
-import DatePicker from '../../components/filters/DatePicker';
 import DropdownDialog from '../../components/DropdownDialog/DropdownDialog';
 import { withRouter } from '../../components/routing/RouterUtil';
 

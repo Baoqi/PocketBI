@@ -39,7 +39,6 @@ public class CannedReportWsTest extends AbstractWsTest {
         mvcResult = mvc.perform(
                 post(CANNEDREPORTS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isCreated())
@@ -55,7 +54,6 @@ public class CannedReportWsTest extends AbstractWsTest {
         // Verify the list
         mvcResult = mvc.perform(
                 get(CANNEDREPORTS_BASE_URL)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         responeText = mvcResult.getResponse().getContentAsString();
@@ -68,7 +66,6 @@ public class CannedReportWsTest extends AbstractWsTest {
 
         mvcResult = mvc.perform(
                 delete(CANNEDREPORTS_BASE_URL+ "/" + id)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -80,7 +77,6 @@ public class CannedReportWsTest extends AbstractWsTest {
     private String findReport(long id) throws Exception {
         mvcResult = mvc.perform(
                 get(CANNEDREPORTS_BASE_URL+ "/" + id)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         return mvcResult.getResponse().getContentAsString();

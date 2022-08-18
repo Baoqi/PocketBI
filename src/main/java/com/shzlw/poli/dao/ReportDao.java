@@ -29,15 +29,6 @@ public class ReportDao {
         return jt.query(sql, new Object[] {}, new ReportRowMapper());
     }
 
-    public List<Report> findByViewer(long userId) {
-        String sql = "SELECT d.id, d.name, d.style, d.project "
-                    + "FROM p_group_report gd, p_report d, p_group_user gu "
-                    + "WHERE gd.report_id = d.id "
-                    + "AND gd.group_id = gu.group_id "
-                    + "AND gu.user_id = ?";
-        return jt.query(sql, new Object[] { userId }, new ReportRowMapper());
-    }
-
     public Report findById(long id) {
         String sql = "SELECT id, name, style, project FROM p_report WHERE id=?";
         try {

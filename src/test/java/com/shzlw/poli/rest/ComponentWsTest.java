@@ -52,7 +52,6 @@ public class ComponentWsTest extends AbstractWsTest {
         mvcResult = mvc.perform(
                 post(COMPONENTS_BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isCreated())
@@ -67,7 +66,6 @@ public class ComponentWsTest extends AbstractWsTest {
         // Verify find by report
         mvcResult = mvc.perform(
                 get(COMPONENTS_BASE_URL + "/report/" + reportId)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isOk())
                 .andReturn();
@@ -85,7 +83,6 @@ public class ComponentWsTest extends AbstractWsTest {
         mvcResult = mvc.perform(
                 put(COMPONENTS_BASE_URL + "/data")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isOk())
@@ -104,7 +101,6 @@ public class ComponentWsTest extends AbstractWsTest {
         mvcResult = mvc.perform(
                 put(COMPONENTS_BASE_URL + "/style")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isOk())
@@ -122,7 +118,6 @@ public class ComponentWsTest extends AbstractWsTest {
         mvcResult = mvc.perform(
                 put(COMPONENTS_BASE_URL + "/position")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
                         .content(body)
         )
                 .andExpect(status().isOk())
@@ -134,7 +129,6 @@ public class ComponentWsTest extends AbstractWsTest {
         // ********** Delete **********
         mvcResult = mvc.perform(
                 delete(COMPONENTS_BASE_URL + "/" + id)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -145,7 +139,6 @@ public class ComponentWsTest extends AbstractWsTest {
         // Verify find by report
         mvcResult = mvc.perform(
                 get(COMPONENTS_BASE_URL + "/report/" + reportId)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andExpect(status().isOk())
                 .andReturn();
@@ -156,7 +149,6 @@ public class ComponentWsTest extends AbstractWsTest {
     private String findComponent(long id) throws Exception {
         mvcResult = mvc.perform(
                 get(COMPONENTS_BASE_URL + "/" + id)
-                        .requestAttr(Constants.HTTP_REQUEST_ATTR_USER, adminUser)
         )
                 .andReturn();
         return mvcResult.getResponse().getContentAsString();

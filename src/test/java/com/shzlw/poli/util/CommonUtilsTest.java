@@ -40,10 +40,4 @@ public class CommonUtilsTest {
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
         Assert.assertEquals("2019-01-01", CommonUtils.toReadableDate(dateTime));
     }
-
-    @Test
-    public void testGetParamByAttrKey() {
-        String rt = CommonUtils.getParamByAttrKey("attrKey");
-        Assert.assertEquals("$user_attr[attrKey]", rt);
-    }
 }

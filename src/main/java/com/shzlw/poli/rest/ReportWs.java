@@ -5,9 +5,7 @@ import com.shzlw.poli.config.AppProperties;
 import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dao.ReportDao;
 import com.shzlw.poli.model.Report;
-import com.shzlw.poli.model.User;
 import com.shzlw.poli.service.ReportService;
-import com.shzlw.poli.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,8 +38,7 @@ public class ReportWs {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public List<Report> findAll(HttpServletRequest request) {
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        return reportService.getReportsByUser(user);
+        return reportService.getAllReports();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,8 +62,7 @@ public class ReportWs {
     @Transactional
     public ResponseEntity<Long> add(@RequestBody Report report,
                                     HttpServletRequest request) {
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        reportService.invalidateCache(user.getId());
+        reportService.invalidateCache();
         long id = reportDao.insert(report.getName(), report.getStyle(), report.getProject());
         return new ResponseEntity<Long>(id, HttpStatus.CREATED);
     }
@@ -75,8 +71,7 @@ public class ReportWs {
     @Transactional
     public ResponseEntity<?> update(@RequestBody Report report,
                                     HttpServletRequest request) {
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        reportService.invalidateCache(user.getId());
+        reportService.invalidateCache();
         reportDao.update(report);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -85,8 +80,7 @@ public class ReportWs {
     @Transactional
     public ResponseEntity<?> delete(@PathVariable("id") long reportId,
                                     HttpServletRequest request) {
-        User user = (User) request.getAttribute(Constants.HTTP_REQUEST_ATTR_USER);
-        reportService.invalidateCache(user.getId());
+        reportService.invalidateCache();
         componentDao.deleteByReportId(reportId);
         reportDao.delete(reportId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

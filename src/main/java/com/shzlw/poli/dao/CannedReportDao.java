@@ -35,14 +35,6 @@ public class CannedReportDao {
         return jt.query(sql, new Object[]{}, new CannedReportInfoMapper());
     }
 
-    public List<CannedReport> findByUserId(long userId) {
-        String sql = "SELECT r.id, r.created_at, u.username AS created_by, r.name "
-                + "FROM p_canned_report r "
-                + "LEFT JOIN p_user u ON r.user_id = u.id "
-                + "WHERE r.user_id=?";
-        return jt.query(sql, new Object[]{ userId }, new CannedReportInfoMapper());
-    }
-
     public CannedReport findById(long id) {
         String sql = "SELECT r.id, r.created_at, u.username AS created_by, r.name, r.data "
                     + "FROM p_canned_report r "
@@ -64,11 +56,11 @@ public class CannedReportDao {
         }
     }
 
-    public long insert(long userId, long createdAt, String name, String data) {
+    public long insert(long createdAt, String name, String data) {
         String sql = "INSERT INTO p_canned_report(user_id, created_at, name, data) "
                     + "VALUES(:user_id, :created_at, :name, :data)";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(CannedReport.USER_ID, userId);
+        params.addValue(CannedReport.USER_ID, 0L);
         params.addValue(CannedReport.CREATED_AT, createdAt);
         params.addValue(CannedReport.NAME, name);
         params.addValue(CannedReport.DATA, data);

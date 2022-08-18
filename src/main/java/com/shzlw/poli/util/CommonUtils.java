@@ -32,8 +32,4 @@ public final class CommonUtils {
     public static String getSimpleError(Exception e) {
         return "ERROR: " + e.getClass().getCanonicalName() + ": " + e.getMessage();
     }
-
-    public static String getParamByAttrKey(String attrKey) {
-        return "$user_attr[" + attrKey + "]";
-    }
 }

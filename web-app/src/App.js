@@ -18,7 +18,6 @@ import {
   faSquare as farSquare,
   faHeart as farHeart
 } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -26,11 +25,8 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 import './App.css';
 
-import Login from './views/Login/Login';
-import ChangeTempPassword from './views/Login/ChangeTempPassword';
 import Workspace from './views/Workspace';
 import PageNotFound from './views/PageNotFound';
-import * as Constants from './api/Constants';
 import * as Util from './api/Util';
 
 
@@ -49,9 +45,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      sysRole: '',
-      isAuthorizing: false,
       localeLanguage: ''
     }
   }
@@ -59,76 +52,6 @@ class App extends React.Component {
   componentDidMount() {
     this.configAxiosInterceptors();
     this.configLocaleLanguage();
-
-    const pathname = this.props.location.pathname;
-    const search = this.props.location.search;
-    const currentPath = pathname + search;
-
-    const rememberMeConfig = localStorage.getItem(Constants.REMEMBERME);
-    const rememberMe = rememberMeConfig && rememberMeConfig === Constants.YES;
-
-    const {
-      sysRole
-    } = this.state;
-
-    let isAuthenticated = false;
-    if (sysRole) {
-      isAuthenticated = true;
-    }
-
-    if (!isAuthenticated && rememberMe) {
-      this.setState({
-        isAuthorizing: true
-      }, () => {
-        axios.post('/auth/login/cookie')
-          .then(res => {
-            this.handleLoginResponse(res.data, currentPath);
-          }).catch(error => {
-            this.onLogout();
-          });
-      });
-    }
-  }
-
-  handleLoginResponse = (loginResponse, currentPath) => {
-    if (loginResponse.error) {
-      this.setState({
-        sysRole: '',
-        isAuthorizing: false
-      }, () => {
-        this.props.navigate('/login');
-      });
-    } else {
-      this.onLoginSuccess(loginResponse, currentPath);
-    }
-  }
-
-  onLoginSuccess = (loginResponse = {}, pathname = '/') => {
-    if (loginResponse.isTempPassword) {
-      this.props.navigate('/changepassword');
-    } else {
-      this.setState({
-        username: loginResponse.username,
-        sysRole: loginResponse.sysRole,
-        isAuthorizing: false
-      }, () => {
-        let directUrl = '/workspace/report';
-        if (pathname !== '/' && pathname !== '/login') {
-          directUrl = pathname;
-        }
-        this.props.navigate(directUrl);
-      });
-    }
-  }
-
-  onLogout = () => {
-    this.setState({
-      username: '',
-      sysRole: '',
-      isAuthorizing: false
-    }, () => {
-      this.props.navigate('/login');
-    });
   }
 
   configAxiosInterceptors = () => {
@@ -137,10 +60,6 @@ class App extends React.Component {
       }, (error) => {
         const readableServerError = Util.toReadableServerError(error);
         toast.error(() => <div className="toast-msg-body">{readableServerError}</div>);
-        const statusCode = error.response.status;
-        if(statusCode === 401 || statusCode === 403) { 
-          this.onLogout();
-        }
         return Promise.reject(error);
     });
   }
@@ -168,39 +87,13 @@ class App extends React.Component {
   }
    
   render() {
-    const {
-      username,
-      sysRole,
-      isAuthorizing
-    } = this.state;
-
-    const { t } = this.props;
-
-    let isAuthenticated = false;
-    if (sysRole) {
-      isAuthenticated = true;
-    }
-
-    if (isAuthorizing) {
-      return (
-        <div className="authenticating-panel">
-          <div className="authenticating-panel-title">{t('Poli')}</div>
-          <FontAwesomeIcon icon="circle-notch" spin={true} size="2x" />
-        </div>
-      )
-    }
-
     return (
       <div className="app">
         <Routes>
-          <Route exact path="/" element={<Login onLoginSuccess={this.onLoginSuccess} />} />
-          <Route path="login" element={<Login onLoginSuccess={this.onLoginSuccess} />} />
-          <Route path="changepassword" element={<ChangeTempPassword />} />
-          <Route path="workspace/*" element={isAuthenticated ? (
-              <Workspace  username={username} sysRole={sysRole} onLogout={this.onLogout} />
-          ) : (
-              <Navigate replace to='/login' />
-          ) } />
+          <Route exact path="/" element={<Navigate replace to='/workspace/report' />} />
+          <Route path="workspace/*" element={
+              <Workspace  />
+          } />
           <Route element={<PageNotFound />} />
         </Routes>
         <ToastContainer
