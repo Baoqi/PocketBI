@@ -47,20 +47,6 @@ public class ReportDao {
         }
     }
 
-    public List<Report> findFavouritesByUserId(long userId) {
-        String sql = "SELECT r.id, r.name, r.project "
-                    + "FROM p_report r, p_user_favourite uf "
-                    + "WHERE r.id = uf.report_id "
-                    + "AND uf.user_id = ?";
-        return jt.query(sql, new Object[] { userId }, (rs, i) -> {
-            Report r = new Report();
-            r.setId(rs.getLong(Report.ID));
-            r.setName(rs.getString(Report.NAME));
-            r.setProject(rs.getString(Report.PROJECT));
-            return r;
-        });
-    }
-
     public Report findByName(String name) {
         String sql = "SELECT id, name, style, project FROM p_report WHERE name=?";
         try {

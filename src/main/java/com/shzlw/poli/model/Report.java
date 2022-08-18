@@ -30,9 +30,6 @@ public class Report {
 
     private String project;
 
-    @JsonProperty(value = "isFavourite")
-    private boolean isFavourite;
-
     public long getId() {
         return id;
     }
@@ -55,14 +52,6 @@ public class Report {
 
     public void setProject(String project) {
         this.project = project;
-    }
-
-    public boolean isFavourite() {
-        return isFavourite;
-    }
-
-    public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
     }
 
     @JsonRawValue

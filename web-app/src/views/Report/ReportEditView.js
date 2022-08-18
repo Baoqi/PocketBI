@@ -48,7 +48,6 @@ class ReportEditView extends React.Component {
       name: '',
       project: '',
       style: {},
-      isFavourite: false,
       reportType: '',
       reportViewWidth: 1000,
       cannedReportName: '',
@@ -102,7 +101,6 @@ class ReportEditView extends React.Component {
                 name: report.name,
                 style: report.style,
                 reportType: reportType,
-                isFavourite: report.isFavourite,
                 project: report.project
               }, () => {
                 this.refresh();
@@ -520,22 +518,6 @@ class ReportEditView extends React.Component {
       });
   }
   
-  toggleFavourite = () => {
-    const {
-      reportId,
-      isFavourite
-    } = this.state;
-    const status = isFavourite ? 'remove' : 'add';
-
-    axios.post(`/ws/reports/favourite/${reportId}/${status}`)
-      .then(res => {
-        this.setState(prevState => ({
-          isFavourite: !prevState.isFavourite
-        }), () => {
-          this.props.onFavouriteChange(reportId, this.state.isFavourite);
-        }); 
-      });
-  }
 
   onDatePickerChange = (name, date) => {
     this.setState({
@@ -555,7 +537,6 @@ class ReportEditView extends React.Component {
       showControl,
       reportType,
       isPendingApplyFilters,
-      isFavourite,
       isExporting
     } = this.state;
     const autoRefreshStatus = autoRefreshTimerId === '' ? 'OFF' : 'ON';
@@ -869,13 +850,6 @@ class ReportEditView extends React.Component {
           onClose={() => this.setState({ showFunctionButtonDialog: false })}
           >
           <div className="form-panel">
-            <button className="button square-button button-transparent ml-4" onClick={this.toggleFavourite}>
-              { isFavourite ? (
-                <FontAwesomeIcon icon="heart" title={t('Favourite')} fixedWidth />
-              ) : (
-                <FontAwesomeIcon icon={['far', 'heart']} title={t('Favourite')} fixedWidth />
-              )}
-            </button>
             <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
               <FontAwesomeIcon icon="archive" title={t('Save Canned Report')}  fixedWidth />
             </button>

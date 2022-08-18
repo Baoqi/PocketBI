@@ -34,7 +34,6 @@ class Report extends Component {
       cannedReports: [],
       activeTab: t(AD_HOC),
       activeCannedReportId: 0,
-      favouriteReports: [],
       projects: [],
       nonProjectReports: []
     }
@@ -69,7 +68,6 @@ class Report extends Component {
     }
     this.fetchReports();
     this.fetchCannedReports();
-    this.fetchFavouriteReports();
   }
 
   fetchReports = () => {
@@ -114,16 +112,6 @@ class Report extends Component {
         const cannedReports = res.data;
         this.setState({ 
           cannedReports: cannedReports 
-        });
-      });
-  }
-
-  fetchFavouriteReports = () => {
-    axios.get('/ws/reports/favourite')
-      .then(res => {
-        const favouriteReports = res.data;
-        this.setState({ 
-          favouriteReports: favouriteReports 
         });
       });
   }
@@ -238,10 +226,6 @@ class Report extends Component {
     });
   }
 
-  onFavouriteChange = (reportId, isFavourite) => {
-    this.fetchFavouriteReports();
-  }
-
   toggleProject = (projectName) => {
     const {
       projects
@@ -265,7 +249,6 @@ class Report extends Component {
       searchValue,
       cannedReports = [],
       activeCannedReportId,
-      favouriteReports = [],
       projects = [],
       nonProjectReports = []
     } = this.state;
@@ -352,22 +335,6 @@ class Report extends Component {
       }
     }
 
-    const favouriteRows = [];
-    for (let i = 0; i < favouriteReports.length; i++) {
-      const report = favouriteReports[i];
-      const name = report.name;
-      const menuActive = activeReportId === report.id ? 'report-menu-item-active' : '';
-      if (!searchValue || (searchValue && name.includes(searchValue))) {
-        favouriteRows.push(
-          (
-            <div key={i} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.viewReport(report.id)}>
-              {name}
-            </div>
-          )
-        )
-      }
-    }
-
     const info = editable && reports.length === 0 ? 'Create a new report!' : 'Select a report!';
 
     return (
@@ -393,10 +360,6 @@ class Report extends Component {
               onTabChange={this.onTabChange}
               >
 
-              <div title={t('Favourite')} iconOnly={true} icon={'heart'}>
-                {favouriteRows}
-              </div>
-              
               <div title={t('Ad Hoc')} iconOnly={true} icon={'clipboard'}>
                 {projectRows}
                 {nonProjectReportRows}
@@ -422,7 +385,6 @@ class Report extends Component {
                         editable={editable}
                         reportType={Constants.ADHOC}
                         onCannedReportSave={this.onCannedReportSave}
-                        onFavouriteChange={this.onFavouriteChange}
                     />
                 }
             />
