@@ -4,7 +4,9 @@ import com.shzlw.poli.dao.ComponentDao;
 import com.shzlw.poli.dto.FilterParameter;
 import com.shzlw.poli.dto.QueryRequest;
 import com.shzlw.poli.dto.QueryResult;
+import com.shzlw.poli.dto.Table;
 import com.shzlw.poli.model.Component;
+import com.shzlw.poli.model.JdbcDataSourcePB;
 import com.shzlw.poli.service.JdbcDataSourceService;
 import com.shzlw.poli.service.JdbcQueryService;
 import com.shzlw.poli.service.ReportService;
@@ -41,13 +43,19 @@ public class JdbcQueryWs {
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     public QueryResult runQuery(@RequestBody QueryRequest queryRequest) {
-        long dataSourceId = queryRequest.getJdbcDataSourceId();
+        JdbcDataSourcePB dataSourcePB = queryRequest.getJdbcDataSource();
         String sql = queryRequest.getSqlQuery();
         int resultLimit = queryRequest.getResultLimit();
 
-        DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourceId);
+        DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourcePB);
         QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, sql, null, resultLimit);
         return queryResult;
+    }
+
+    @RequestMapping(value = "/schema", method = RequestMethod.POST)
+    public List<Table> getSchema(@RequestBody JdbcDataSourcePB dataSourcePB) {
+        DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourcePB);
+        return jdbcQueryService.getSchema(dataSource);
     }
 
     @RequestMapping(

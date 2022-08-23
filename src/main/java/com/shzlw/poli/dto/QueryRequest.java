@@ -1,19 +1,21 @@
 package com.shzlw.poli.dto;
 
+import com.shzlw.poli.model.JdbcDataSourcePB;
+
 public class QueryRequest {
 
-    private long jdbcDataSourceId;
+    private JdbcDataSourcePB jdbcDataSource;
     private String sqlQuery;
     private int resultLimit;
 
     public QueryRequest() {}
 
-    public long getJdbcDataSourceId() {
-        return jdbcDataSourceId;
+    public JdbcDataSourcePB getJdbcDataSource() {
+        return jdbcDataSource;
     }
 
-    public void setJdbcDataSourceId(long jdbcDataSourceId) {
-        this.jdbcDataSourceId = jdbcDataSourceId;
+    public void setJdbcDataSource(JdbcDataSourcePB jdbcDataSource) {
+        this.jdbcDataSource = jdbcDataSource;
     }
 
     public String getSqlQuery() {

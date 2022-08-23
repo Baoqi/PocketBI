@@ -7,6 +7,7 @@ import com.google.common.cache.RemovalListener;
 import com.shzlw.poli.config.AppProperties;
 import com.shzlw.poli.dao.JdbcDataSourceDao;
 import com.shzlw.poli.model.JdbcDataSource;
+import com.shzlw.poli.model.JdbcDataSourcePB;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,9 @@ public class JdbcDataSourceService {
      * Key: JdbcDataSource id
      * Value: HikariDataSource
      */
-    private static final Cache<Long, HikariDataSource> DATA_SOURCE_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<String, HikariDataSource> DATA_SOURCE_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
-            .removalListener((RemovalListener<Long, HikariDataSource>) removal -> {
+            .removalListener((RemovalListener<String, HikariDataSource>) removal -> {
                 HikariDataSource ds = removal.getValue();
                 ds.close();
             })
@@ -57,17 +58,9 @@ public class JdbcDataSourceService {
         DATA_SOURCE_CACHE.invalidate(dataSourceId);
     }
 
-    public DataSource getDataSource(long dataSourceId) {
-        if (dataSourceId == 0) {
-            return null;
-        }
-
+    public DataSource getDataSource(JdbcDataSourcePB dataSource) {
         try {
-            DataSource hiDs = DATA_SOURCE_CACHE.get(dataSourceId, () -> {
-                JdbcDataSource dataSource = jdbcDataSourceDao.findById(dataSourceId);
-                if (dataSource == null) {
-                    return null;
-                }
+            DataSource hiDs = DATA_SOURCE_CACHE.get(dataSource.getId(), () -> {
                 HikariDataSource newHiDs = new HikariDataSource();
                 newHiDs.setJdbcUrl(dataSource.getConnectionUrl());
                 newHiDs.setUsername(dataSource.getUsername());
@@ -83,5 +76,9 @@ public class JdbcDataSourceService {
         } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
             return null;
         }
+    }
+
+    public DataSource getDataSource(long dataSourceId) {
+        throw new RuntimeException("not implemented");
     }
 }

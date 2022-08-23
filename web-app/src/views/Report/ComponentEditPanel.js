@@ -290,8 +290,18 @@ class ComponentEditPanel extends React.Component {
   }
 
   runQuery = () => {
+    if (!this.state.sqlQuery || this.state.sqlQuery.trim().length === 0) {
+      return;
+    }
+
+    const { jdbcDataSources = [], jdbcDataSourceId } = this.state;
+    const index = jdbcDataSources.findIndex(s => s.id === jdbcDataSourceId);
+    if (index === -1) {
+      return;
+    }
+
     const queryRequest ={
-      jdbcDataSourceId: this.state.jdbcDataSourceId,
+      jdbcDataSource: jdbcDataSources[index],
       sqlQuery: this.state.sqlQuery
     };
 
@@ -317,8 +327,12 @@ class ComponentEditPanel extends React.Component {
       showSchema: !prevState.showSchema
     }), () => {
       if (this.state.showSchema) {
-        const { jdbcDataSourceId } = this.state;
-        axios.get(`/ws/jdbcdatasources/schema/${jdbcDataSourceId}`)
+        const { jdbcDataSources = [], jdbcDataSourceId } = this.state;
+        const index = jdbcDataSources.findIndex(s => s.id === jdbcDataSourceId);
+        if (index === -1) {
+          return;
+        }
+        axios.post('/ws/jdbcquery/schema', jdbcDataSources[index])
           .then(res => {
             const schemas = res.data;
             this.setState({
