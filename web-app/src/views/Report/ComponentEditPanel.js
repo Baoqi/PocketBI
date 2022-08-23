@@ -755,7 +755,7 @@ class ComponentEditPanel extends React.Component {
                   <Select
                     name={'jdbcDataSourceId'}
                     value={this.state.jdbcDataSourceId}
-                    onChange={this.handleIntegerChange}
+                    onChange={this.handleInputChange}
                     options={jdbcDataSources}
                     optionDisplay={'name'}
                     optionValue={'id'}
