@@ -1,7 +1,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -17,6 +16,7 @@ import { withRouter } from '../../components/routing/RouterUtil';
 import * as Constants from '../../api/Constants';
 import * as Util from '../../api/Util';
 import './Report.css';
+import {deleteOneRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
 
 
 
@@ -87,9 +87,9 @@ class ReportEditView extends React.Component {
       } else {
         const { reportType } = this.props;
         if (reportType === Constants.ADHOC) {
-          axios.get(`/ws/reports/${reportId}`)
+          getOneRecord('vis_report', reportId)
             .then(res => {
-              const report = res.data;
+              const report = res;
               this.setState({
                 reportId: report.id,
                 name: report.name,
@@ -160,9 +160,11 @@ class ReportEditView extends React.Component {
       reportType: reportType
     }, () => {
       // MAYBE: support canned report?
-      axios.get(`/ws/reports/name/${reportName}`)
+      getFullRecordList('vis_report', {
+        filter: `name="${reportName}"`
+      })
         .then(res => {
-          const result = res.data;
+          const result = res;
           this.setState({
             reportId: result.id,
             name: result.name,
@@ -266,7 +268,7 @@ class ReportEditView extends React.Component {
       style: style
     };
 
-    axios.put('/ws/reports/', report)
+    updateRecord('vis_report', report.id, report)
       .then(res => {
         this.props.onReportSave(reportId);
         this.setState({
@@ -350,9 +352,9 @@ class ReportEditView extends React.Component {
         columnValue
       } = data;
       if (isFullScreenView) {
-        axios.get(`/ws/reports/${reportId}`)
+        getOneRecord('vis_report', reportId)
           .then(res => {
-            const report = res.data;
+            const report = res;
             const nextReport = report.name;
             const nextLink = `/workspace/report/fullscreen?$toReport=${nextReport}&$fromReport=${name}&${columnName}=${columnValue}`;
             this.props.navigate(nextLink);
@@ -396,7 +398,7 @@ class ReportEditView extends React.Component {
     const reportId = objectToDelete.id;
     
     if (reportType === Constants.ADHOC) {
-      axios.delete(`/ws/reports/${reportId}`)
+      deleteOneRecord('vis_report', reportId)
         .then(res => {
           this.props.onReportDelete(reportId);
           this.closeConfirmDeletionPanel();

@@ -1,7 +1,6 @@
 
 import React, { Component } from 'react';
 import { Route, Routes } from "react-router-dom";
-import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -13,6 +12,7 @@ import Modal from '../../components/Modal/Modal';
 //import Tabs from '../../components/Tabs/Tabs';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import { withRouter } from '../../components/routing/RouterUtil';
+import {createRecord, getFullRecordList} from "../../api/PocketBaseApi";
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
 const ROUTE_PATTERNS = [ROUTE_WORKSPACE_REPORT];
@@ -59,9 +59,9 @@ class Report extends Component {
   }
 
   fetchReports = () => {
-    axios.get('/ws/reports')
+    getFullRecordList('vis_report')
       .then(res => {
-        const reports = res.data || [];
+        const reports = res || [];
         const projects = [];
         const nonProjectReports = [];
         for (let i = 0; i < reports.length; i++) {
@@ -146,9 +146,9 @@ class Report extends Component {
       }
     };
 
-    axios.post('/ws/reports', report)
+    createRecord('vis_report', report)
       .then(res => {
-        const reportId = res.data;
+        const reportId = res.id;
         this.closeEditPanel();
         this.fetchReports();
         this.props.navigate(`/workspace/report/${reportId}`);

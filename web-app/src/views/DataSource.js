@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 import Modal from '../components/Modal/Modal';
 import SearchInput from '../components/SearchInput/SearchInput';
+import {createRecord, deleteOneRecord, getFullRecordList, updateRecord} from "../api/PocketBaseApi";
 
 class DataSource extends Component {
 
@@ -47,9 +48,9 @@ class DataSource extends Component {
   }
 
   fetchDataSources() {
-    axios.get('/ws/jdbcdatasources')
+    getFullRecordList('vis_datasource')
       .then(res => {
-        const jdbcDataSources = res.data;
+        const jdbcDataSources = res;
         this.setState({ 
           jdbcDataSources: jdbcDataSources 
         });
@@ -100,7 +101,7 @@ class DataSource extends Component {
       }
 
       // Update
-      axios.put('/ws/jdbcdatasources', ds)
+      updateRecord('vis_datasource', ds.id, ds)
         .then(res => {
           this.closeEditPanel();
           this.fetchDataSources();
@@ -110,8 +111,7 @@ class DataSource extends Component {
         });
     } else {
       ds.password = password;
-
-      axios.post('/ws/jdbcdatasources', ds)
+      createRecord('vis_datasource', ds)
         .then(res => {
           this.closeEditPanel();
           this.fetchDataSources();
@@ -167,7 +167,7 @@ class DataSource extends Component {
     const { 
       objectToDelete = {} 
     } = this.state;
-    axios.delete('/ws/jdbcdatasources/' + objectToDelete.id)
+    deleteOneRecord('vis_datasource', objectToDelete.id)
       .then(res => {
         this.fetchDataSources();
         this.closeConfirmDeletionPanel();

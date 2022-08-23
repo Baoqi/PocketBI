@@ -15,6 +15,7 @@ import ColorPicker from '../../components/ColorPicker/ColorPicker';
 import InputRange from '../../components/filters/InputRange';
 import Modal from '../../components/Modal/Modal';
 import GridLayout from '../../components/GridLayout';
+import {deleteOneRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
 
 const BASE_WIDTH = 1200;
 
@@ -138,11 +139,12 @@ class ComponentViewPanel extends React.Component {
     if (reportId === null) {
       return;
     }
-    axios.get(`/ws/components/report/${reportId}`)
-      .then(res => {
-        const result = res.data;
-        this.buildViewPanel(result, viewWidth, true, urlFilterParams);
-      });
+    getFullRecordList('vis_component', {
+      filter: `report_id="${reportId}"`
+    }).then(res => {
+      const result = res;
+      this.buildViewPanel(result, viewWidth, true, urlFilterParams);
+    });
   }
 
   buildViewPanel = (components, viewWidth, isAdhoc, urlFilterParams) => {
@@ -335,7 +337,7 @@ class ComponentViewPanel extends React.Component {
     const newComponent = {...component};
     const { gridWidth } = this.state;
     this.resizeComponentToBase(newComponent, gridWidth);
-    axios.put('/ws/components/position/', newComponent)
+    updateRecord('vis_component', newComponent.id, newComponent)
       .then(res => {
       });
   }
@@ -373,7 +375,7 @@ class ComponentViewPanel extends React.Component {
       objectToDelete
     } = this.state;
     const componentId = objectToDelete;
-    axios.delete(`/ws/components/${componentId}`)
+    deleteOneRecord('vis_component', componentId)
       .then(res => {
         const { components } = this.state;
         const index = components.findIndex(w => w.id === componentId);
@@ -481,9 +483,9 @@ class ComponentViewPanel extends React.Component {
   }
 
   handleSavedComponent = (componentId) => {
-    axios.get(`/ws/components/${componentId}`)
+    getOneRecord('vis_component', componentId)
       .then(res => {
-        const component = res.data;
+        const component = res;
         const { 
           components, 
           gridWidth 
@@ -539,7 +541,7 @@ class ComponentViewPanel extends React.Component {
       }
       this.resizeComponentToBase(selectedComponent, gridWidth);
       // Save position information and style
-      axios.put('/ws/components/style/', selectedComponent)
+      updateRecord('vis_component', selectedComponent.id, selectedComponent)
       .then(res => {
         this.setState({
           selectedComponentId: 0

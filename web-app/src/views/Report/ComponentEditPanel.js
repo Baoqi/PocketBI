@@ -23,6 +23,7 @@ import InputRange from '../../components/filters/InputRange';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import { getEChartsComponent } from "../../components/echarts/ComponentFactory";
+import {createRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -89,17 +90,17 @@ class ComponentEditPanel extends React.Component {
 
   fetchComponent = async (componentId) => {
     this.setState(this.initialState);
-    axios.get('/ws/jdbcdatasources')
+    getFullRecordList('vis_datasource')
       .then(res => {
-        const jdbcDataSources = res.data;
+        const jdbcDataSources = res;
         this.setState({ 
           jdbcDataSources: jdbcDataSources 
         });
       });
 
-    axios.get('/ws/reports')
+    getFullRecordList('vis_report')
       .then(res => {
-        const reports = res.data;
+        const reports = res;
         this.setState({ 
           drillReports: reports 
         });
@@ -113,9 +114,9 @@ class ComponentEditPanel extends React.Component {
       this.setState({
         componentId: componentId
       })
-      axios.get('/ws/components/' + componentId)
+      getOneRecord('vis_component', componentId)
         .then(res => {
-          const component = res.data;
+          const component = res;
           const {
             type,
             subType,
@@ -274,14 +275,14 @@ class ComponentEditPanel extends React.Component {
       component.width = 200;
       component.height = 200;
 
-      axios.post('/ws/components', component)
+      createRecord('vis_component', component)
         .then(res => {
-          const componentId = res.data;
+          const componentId = res.id;
           this.props.onSave(componentId);
         });
     } else {
       component.id = componentId;
-      axios.put('/ws/components/data', component)
+      updateRecord('vis_component', component.id, component)
         .then(res => {
           this.props.onSave(componentId);
         });
