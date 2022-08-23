@@ -55,6 +55,8 @@ class App extends React.Component {
   }
 
   configAxiosInterceptors = () => {
+    axios.defaults.baseURL = 'http://bwu.guandata.com:6688/';
+
     axios.interceptors.response.use((response) => {
         return response;
       }, (error) => {
@@ -72,6 +74,7 @@ class App extends React.Component {
       return;
     }
 
+    /*
     axios.get('/info/general')
       .then(res => {
         const info = res.data;
@@ -84,6 +87,7 @@ class App extends React.Component {
           localeLanguage: localeLanguage
         });
       });
+     */
   }
    
   render() {
