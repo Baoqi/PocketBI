@@ -52,3 +52,14 @@ export const toReadableServerError = (error) => {
   const displayError = serverError + ": " + serverMsg;
   return displayError;
 }
+
+export const isStringTrimEmpty = (str) => (!str || str.trim().length === 0);
+
+export const findItemById = (items, id) => {
+  const index = items.findIndex(s => s.id === id);
+  if (index === -1) {
+    return null;
+  } else {
+    return items[index];
+  }
+}

@@ -48,11 +48,13 @@ public class JdbcQueryWs {
         int resultLimit = queryRequest.getResultLimit();
 
         DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourcePB);
-        QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, sql, null, resultLimit);
+        QueryResult queryResult = jdbcQueryService.queryByParams(dataSource, sql, queryRequest.getFilterParams(), resultLimit);
         return queryResult;
     }
 
-    @RequestMapping(value = "/schema", method = RequestMethod.POST)
+    @RequestMapping(value = "/schema",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Table> getSchema(@RequestBody JdbcDataSourcePB dataSourcePB) {
         DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourcePB);
         return jdbcQueryService.getSchema(dataSource);

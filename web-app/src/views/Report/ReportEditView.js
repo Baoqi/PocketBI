@@ -39,6 +39,7 @@ class ReportEditView extends React.Component {
       refreshInterval: 15,
       lastRefreshLabelTimerId: '',
       jdbcDataSourceOptions: [],
+      jdbcDataSources: [],
       fromReport: '',
       reportId: 0,
       name: '',
@@ -208,8 +209,25 @@ class ReportEditView extends React.Component {
   }
 
   refresh = () => {
+    this.refreshDataSources();
     this.refreshComponentView();
     this.updateLastRefreshed();
+  }
+
+  refreshDataSources = () => {
+    const {
+      reportType
+    } = this.state;
+
+    if (reportType === Constants.ADHOC) {
+      getFullRecordList('vis_datasource')
+          .then(res => {
+            const jdbcDataSources = res;
+            this.setState({
+              jdbcDataSources: jdbcDataSources
+            });
+          });
+    }
   }
 
   refreshComponentView = () => {
@@ -609,6 +627,7 @@ class ReportEditView extends React.Component {
           onComponentContentClick={this.onComponentContentClick}
           onComponentFilterInputChange={this.onComponentFilterInputChange}
           reportType={reportType}
+          jdbcDataSources={this.state.jdbcDataSources}
           {...this.state.style}
         />
 
@@ -620,6 +639,7 @@ class ReportEditView extends React.Component {
           <ComponentEditPanel 
             ref={this.componentEditPanel} 
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
+            jdbcDataSources={this.state.jdbcDataSources}
             reportId={this.state.reportId}
             onSave={this.onComponentSave}
           />

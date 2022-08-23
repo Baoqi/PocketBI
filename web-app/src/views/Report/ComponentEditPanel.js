@@ -24,6 +24,7 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import { getEChartsComponent } from "../../components/echarts/ComponentFactory";
 import {createRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
+import {findItemById} from "../../api/Util";
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -38,7 +39,6 @@ class ComponentEditPanel extends React.Component {
     const { t } = this.props;
     return {
       activeTab: t('Config'),
-      jdbcDataSources: [],
       componentId: null,
       title: '',
       sqlQuery: '',
@@ -90,14 +90,6 @@ class ComponentEditPanel extends React.Component {
 
   fetchComponent = async (componentId) => {
     this.setState(this.initialState);
-    getFullRecordList('vis_datasource')
-      .then(res => {
-        const jdbcDataSources = res;
-        this.setState({ 
-          jdbcDataSources: jdbcDataSources 
-        });
-      });
-
     getFullRecordList('vis_report')
       .then(res => {
         const reports = res;
@@ -294,14 +286,15 @@ class ComponentEditPanel extends React.Component {
       return;
     }
 
-    const { jdbcDataSources = [], jdbcDataSourceId } = this.state;
-    const index = jdbcDataSources.findIndex(s => s.id === jdbcDataSourceId);
-    if (index === -1) {
+    const { jdbcDataSourceId } = this.state;
+    const { jdbcDataSources = [] } = this.props;
+    const jdbcDataSource = findItemById(jdbcDataSources, jdbcDataSourceId);
+    if (!jdbcDataSource) {
       return;
     }
 
     const queryRequest ={
-      jdbcDataSource: jdbcDataSources[index],
+      jdbcDataSource: jdbcDataSource,
       sqlQuery: this.state.sqlQuery
     };
 
@@ -327,12 +320,13 @@ class ComponentEditPanel extends React.Component {
       showSchema: !prevState.showSchema
     }), () => {
       if (this.state.showSchema) {
-        const { jdbcDataSources = [], jdbcDataSourceId } = this.state;
-        const index = jdbcDataSources.findIndex(s => s.id === jdbcDataSourceId);
-        if (index === -1) {
+        const { jdbcDataSourceId } = this.state;
+        const { jdbcDataSources = [] } = this.props;
+        const jdbcDataSource = findItemById(jdbcDataSources, jdbcDataSourceId);
+        if (!jdbcDataSource) {
           return;
         }
-        axios.post('/ws/jdbcquery/schema', jdbcDataSources[index])
+        axios.post('/ws/jdbcquery/schema', jdbcDataSource)
           .then(res => {
             const schemas = res.data;
             this.setState({
@@ -613,12 +607,14 @@ class ComponentEditPanel extends React.Component {
   }
 
   render() {
-    const { t } = this.props;
+    const {
+      t,
+      jdbcDataSources = []
+    } = this.props;
 
     const { 
       type,
       subType,
-      jdbcDataSources = [],
       drillThrough = [],
       drillReports = [],
       showSchema,
@@ -922,7 +918,7 @@ class ComponentEditPanel extends React.Component {
                       name={'drillReportId'}
                       value={this.state.drillReportId}
                       options={drillReports}
-                      onChange={this.handleIntegerChange}
+                      onChange={this.handleOptionChange}
                       optionDisplay={'name'}
                       optionValue={'id'}
                     />

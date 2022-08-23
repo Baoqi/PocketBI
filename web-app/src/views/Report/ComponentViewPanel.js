@@ -16,6 +16,7 @@ import InputRange from '../../components/filters/InputRange';
 import Modal from '../../components/Modal/Modal';
 import GridLayout from '../../components/GridLayout';
 import {deleteOneRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
+import {findItemById, isStringTrimEmpty} from "../../api/Util";
 
 const BASE_WIDTH = 1200;
 
@@ -245,10 +246,41 @@ class ComponentViewPanel extends React.Component {
     return promises;
   }
 
+  getComponentQueryBody(componentId, filterParams) {
+    const params = filterParams === null ? [] : filterParams;
+    const { components } = this.state;
+    const { jdbcDataSources = [] } = this.props;
+
+    const emptyResponse = {
+      sqlQuery: ''
+    }
+    if (isStringTrimEmpty(componentId)) {
+      return emptyResponse;
+    }
+    const component = findItemById(components, componentId);
+    if (!component) {
+      return emptyResponse;
+    }
+
+    const { sqlQuery, jdbcDataSourceId } = component;
+    if (isStringTrimEmpty(sqlQuery) || isStringTrimEmpty(jdbcDataSourceId)) {
+      return emptyResponse;
+    }
+    const jdbcDataSource = findItemById(jdbcDataSources, jdbcDataSourceId);
+    if (!jdbcDataSource) {
+      return emptyResponse;
+    }
+    return {
+      jdbcDataSource: jdbcDataSource,
+      sqlQuery: sqlQuery,
+      filterParams: params
+    };
+  }
+
   queryChart(componentId, filterParams) {
     const params = filterParams === null ? [] : filterParams;
     const { components } = this.state;
-    axios.post(`/ws/jdbcquery/component/${componentId}`, params)
+    axios.post(`/ws/jdbcquery/query`, this.getComponentQueryBody(componentId, params))
       .then(res => {
         const queryResult = res.data;
         const index = components.findIndex(w => w.id === componentId);
@@ -277,7 +309,7 @@ class ComponentViewPanel extends React.Component {
   _queryFilter(componentId, subType) {
     const { components } = this.state;
     if (subType === Constants.SLICER) {
-      return axios.post(`/ws/jdbcquery/component/${componentId}`, [])
+      return axios.post(`/ws/jdbcquery/query`, this.getComponentQueryBody(componentId, []))
         .then(res => {
           const queryResult = res.data;
           const queryResultData = Util.jsonToArray(queryResult.data);
