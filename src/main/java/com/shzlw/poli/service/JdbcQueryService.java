@@ -51,11 +51,14 @@ public class JdbcQueryService {
     }
 
     public String ping(DataSource dataSource, String sql) {
-        try (Connection con = dataSource.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery();) {
-            while (rs.next()) {
-                break;
+        try (Connection con = dataSource.getConnection()) {
+            if (!StringUtils.isEmpty(sql)) {
+                try (PreparedStatement ps = con.prepareStatement(sql);
+                     ResultSet rs = ps.executeQuery();) {
+                    while (rs.next()) {
+                        break;
+                    }
+                }
             }
             return Constants.SUCCESS;
         } catch (Exception e) {

@@ -45,4 +45,11 @@ public class JdbcQueryWs {
         DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourcePB);
         return jdbcQueryService.getSchema(dataSource);
     }
+
+    @RequestMapping(value = "/ping",
+            method = RequestMethod.POST)
+    public String ping(@RequestBody JdbcDataSourcePB dataSourcePB) {
+        DataSource dataSource = jdbcDataSourceService.getDataSource(dataSourcePB);
+        return jdbcQueryService.ping(dataSource, dataSourcePB.getPing());
+    }
 }

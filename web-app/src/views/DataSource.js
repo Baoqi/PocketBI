@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import Modal from '../components/Modal/Modal';
 import SearchInput from '../components/SearchInput/SearchInput';
 import {createRecord, deleteOneRecord, getFullRecordList, updateRecord} from "../api/PocketBaseApi";
+import {findItemById} from "../api/Util";
 
 class DataSource extends Component {
 
@@ -123,7 +124,13 @@ class DataSource extends Component {
   }
 
   ping = (id) => {
-    axios.get(`/ws/jdbcdatasources/ping/${id}`)
+    const { jdbcDataSources = [] } = this.state;
+    const jdbcDataSource = findItemById(jdbcDataSources, id);
+    if (!jdbcDataSource) {
+      return;
+    }
+
+    axios.post(`/ws/jdbcquery/ping`, jdbcDataSource)
       .then(res => {
         const result = res.data;
         if (result === 'success') {
