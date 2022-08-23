@@ -5,8 +5,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.RemovalListener;
 import com.shzlw.poli.config.AppProperties;
-import com.shzlw.poli.dao.JdbcDataSourceDao;
-import com.shzlw.poli.model.JdbcDataSource;
 import com.shzlw.poli.model.JdbcDataSourcePB;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +35,6 @@ public class JdbcDataSourceService {
             })
             .build();
 
-    @Autowired
-    JdbcDataSourceDao jdbcDataSourceDao;
 
     @Autowired
     AppProperties appProperties;
@@ -76,9 +72,5 @@ public class JdbcDataSourceService {
         } catch (ExecutionException | CacheLoader.InvalidCacheLoadException e) {
             return null;
         }
-    }
-
-    public DataSource getDataSource(long dataSourceId) {
-        throw new RuntimeException("not implemented");
     }
 }

@@ -124,35 +124,6 @@ public class JdbcQueryService {
         return executeQuery(npjt, parsedSql, namedParameters, resultLimit);
     }
 
-    public QueryResult executeQuery(DataSource dataSource, String sql, String contentType) {
-        JdbcTemplate jt = new JdbcTemplate(dataSource);
-        final int maxQueryResult = JdbcQueryServiceHelper.calculateMaxQueryResultLimit(appProperties.getMaximumQueryRecords(), Constants.QUERY_RESULT_NOLIMIT);
-
-        QueryResult result = jt.query(sql, new Object[] {}, new ResultSetExtractor<QueryResult>() {
-            @Nullable
-            @Override
-            public QueryResult extractData(ResultSet rs) {
-                try {
-                    ResultSetMetaData metadata = rs.getMetaData();
-                    String[] columnNames = getColumnNames(metadata);
-                    List<Column> columns = getColumnList(metadata);
-                    String data;
-                    if (Constants.CONTENT_TYPE_CSV.equals(contentType)) {
-                        data = resultSetToCsvString(rs, columnNames, maxQueryResult);
-                    } else {
-                        data = resultSetToJsonString(rs, metadata, maxQueryResult);
-                    }
-                    return QueryResult.ofData(data, columns);
-                } catch (Exception e) {
-                    String error = CommonUtils.getSimpleError(e);
-                    return QueryResult.ofError(error);
-                }
-            }
-        });
-
-        return result;
-    }
-
     private QueryResult executeQuery(NamedParameterJdbcTemplate npjt,
                                      String sql,
                                      Map<String, Object> namedParameters,
