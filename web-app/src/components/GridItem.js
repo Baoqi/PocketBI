@@ -75,7 +75,7 @@ class GridItem extends React.PureComponent {
   }
 
   exportCsv = (title, queryResult = {}) => {
-    const queryResultData = Util.jsonToArray(queryResult.data);
+    const queryResultData = queryResult.data;
     const {
       columns = [],
       error
@@ -184,7 +184,7 @@ class GridItem extends React.PureComponent {
       reportType
     } = this.props;
 
-    const queryResultData = Util.jsonToArray(queryResult.data);
+    const queryResultData = queryResult.data;
     const {
       columns = [],
       error

@@ -130,7 +130,7 @@ class DataSource extends Component {
       return;
     }
 
-    axios.post(`/ws/jdbcquery/ping`, jdbcDataSource)
+    axios.post(`/sqlquery/ping`, jdbcDataSource)
       .then(res => {
         const result = res.data;
         if (result === 'success') {

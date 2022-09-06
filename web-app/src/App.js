@@ -55,7 +55,7 @@ class App extends React.Component {
   }
 
   configAxiosInterceptors = () => {
-    axios.defaults.baseURL = 'http://bwu.guandata.com:6688/';
+    axios.defaults.baseURL = 'http://localhost:8090/';
 
     axios.interceptors.response.use((response) => {
         return response;

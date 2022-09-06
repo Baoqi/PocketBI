@@ -3,16 +3,6 @@ export const isArrayEmpty = (array) => {
   return !Array.isArray(array) || !array.length;
 };
 
-export const jsonToArray = (json) => {
-  let array;
-  try {
-    array = JSON.parse(json);
-  } catch(e) {
-    array = [];
-  }
-  return array;
-}
-
 export const getReadableDiffTime = (d1, d2) => {
   const seconds = Math.abs(d1 - d2) / 1000;
   if (seconds <= 5) {

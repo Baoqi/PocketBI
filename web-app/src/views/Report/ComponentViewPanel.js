@@ -271,7 +271,7 @@ class ComponentViewPanel extends React.Component {
       return emptyResponse;
     }
     return {
-      jdbcDataSource: jdbcDataSource,
+      sqlDataSource: jdbcDataSource,
       sqlQuery: sqlQuery,
       filterParams: params
     };
@@ -280,7 +280,7 @@ class ComponentViewPanel extends React.Component {
   queryChart(componentId, filterParams) {
     const params = filterParams === null ? [] : filterParams;
     const { components } = this.state;
-    axios.post(`/ws/jdbcquery/query`, this.getComponentQueryBody(componentId, params))
+    axios.post(`/sqlquery/query`, this.getComponentQueryBody(componentId, params))
       .then(res => {
         const queryResult = res.data;
         const index = components.findIndex(w => w.id === componentId);
@@ -309,10 +309,10 @@ class ComponentViewPanel extends React.Component {
   _queryFilter(componentId, subType) {
     const { components } = this.state;
     if (subType === Constants.SLICER) {
-      return axios.post(`/ws/jdbcquery/query`, this.getComponentQueryBody(componentId, []))
+      return axios.post(`/sqlquery/query`, this.getComponentQueryBody(componentId, []))
         .then(res => {
           const queryResult = res.data;
-          const queryResultData = Util.jsonToArray(queryResult.data);
+          const queryResultData = queryResult.data;
           const checkBoxes = [];
           for (let i = 0; i < queryResultData.length; i++) {
             const values = Object.values(queryResultData[i]);

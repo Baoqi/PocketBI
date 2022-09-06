@@ -294,15 +294,15 @@ class ComponentEditPanel extends React.Component {
     }
 
     const queryRequest ={
-      jdbcDataSource: jdbcDataSource,
+      sqlDataSource: jdbcDataSource,
       sqlQuery: this.state.sqlQuery
     };
 
-    axios.post('/ws/jdbcquery/query', queryRequest)
+    axios.post('/sqlquery/query', queryRequest)
       .then(res => {
         const result = res.data;
 
-        const queryResultData = Util.jsonToArray(result.data);
+        const queryResultData = result.data;
         const { 
           columns = [],
           error
@@ -326,7 +326,7 @@ class ComponentEditPanel extends React.Component {
         if (!jdbcDataSource) {
           return;
         }
-        axios.post('/ws/jdbcquery/schema', jdbcDataSource)
+        axios.post('/sqlquery/schema', jdbcDataSource)
           .then(res => {
             const schemas = res.data;
             this.setState({
