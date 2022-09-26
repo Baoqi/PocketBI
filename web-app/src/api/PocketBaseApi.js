@@ -1,4 +1,5 @@
 import PocketBase from 'pocketbase'
+import {toast} from "react-toastify";
 
 export const client = new PocketBase('http://localhost:8090');
 
@@ -30,17 +31,21 @@ const handleRequest = _handleBuilder(camelToSnakeCase);
 
 
 export const getOneRecord = (sub, id, queryParams) => {
-    return client.records.getOne(sub, id, queryParams).then(handleResponse);
+    return client.records.getOne(sub, id, queryParams)
+        .then(handleResponse)
+        .catch(err => toast.error(err.message));
 }
 
 export const createRecord = (sub, bodyParams, queryParams) => {
     return client.records.create(sub, handleRequest(bodyParams), queryParams)
-        .then(handleResponse);
+        .then(handleResponse)
+        .catch(err => toast.error(err.message));
 }
 
 export const updateRecord = (sub, id, bodyParams, queryParams) => {
     return client.records.update(sub, id, handleRequest(bodyParams), queryParams)
-        .then(handleResponse);
+        .then(handleResponse)
+        .catch(err => toast.error(err.message));
 }
 
 export const getFullRecordList = (sub, queryParams) => {
@@ -54,9 +59,11 @@ export const getFullRecordList = (sub, queryParams) => {
                 return newItems;
             }
             return items;
-        });
+        }).catch(err => toast.error(err.message));
 }
 
 export const deleteOneRecord = (sub, id, queryParams) => {
-    return client.records.delete(sub, id, queryParams).then(handleResponse);
+    return client.records.delete(sub, id, queryParams)
+        .then(handleResponse)
+        .catch(err => toast.error(err.message));
 }

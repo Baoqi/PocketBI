@@ -1,0 +1,53 @@
+.login-view {
+}
+
+.login-input {
+    padding: 7px 10px !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+.login-input:focus {
+    border: 2px solid #bdbdbd !important;
+}
+
+.login-panel {
+    padding: 15px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.login-panel-body {
+    padding: 15px;
+    background-color:#eeeeee;
+    border-radius: 5px;
+}
+
+.login-app-title {
+    font-size: 35px;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #0065FF;
+}
+
+.login-button {
+    width: 100%;
+}
+
+.login-error-msg {
+    text-align: center;
+    margin-bottom: 5px;
+    color: #ef5350;
+    font-weight: bold;
+}
+
+.version-number {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-size: 12px;
+}

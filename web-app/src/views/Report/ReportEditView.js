@@ -336,7 +336,7 @@ class ReportEditView extends React.Component {
 
   fullScreen = () => {
     const { name } = this.state;
-    const url = `/poli/workspace/report/fullscreen?$toReport=${name}`;
+    const url = `/workspace/report/fullscreen?$toReport=${name}`;
     window.open(url, '_blank');
   }
 

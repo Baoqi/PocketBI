@@ -136,7 +136,7 @@ class DataSource extends Component {
         if (result === 'success') {
           toast.success('Ping Succeeded');
         } else {
-          toast.error(result);
+          toast.error(result.error);
         }
       });
   }

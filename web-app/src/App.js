@@ -27,7 +27,9 @@ import './App.css';
 
 import Workspace from './views/Workspace';
 import PageNotFound from './views/PageNotFound';
+import Login from './views/Login/Login';
 import * as Util from './api/Util';
+import {client} from "./api/PocketBaseApi";
 
 
 library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
@@ -51,7 +53,13 @@ class App extends React.Component {
 
   componentDidMount() {
     this.configAxiosInterceptors();
+    this.configPocketBaseApi();
     this.configLocaleLanguage();
+  }
+
+  onLoginSuccess = (loginResponse = {}) => {
+        let directUrl = '/workspace/report';
+        this.props.navigate(directUrl);
   }
 
   configAxiosInterceptors = () => {
@@ -64,6 +72,16 @@ class App extends React.Component {
         toast.error(() => <div className="toast-msg-body">{readableServerError}</div>);
         return Promise.reject(error);
     });
+  }
+
+  configPocketBaseApi = () => {
+    client.afterSend = (response, data) => {
+      if (response.status === 403) {
+        this.props.navigate('/login');
+        return null;
+      }
+      return data;
+    }
   }
 
   configLocaleLanguage = () => {
@@ -95,6 +113,7 @@ class App extends React.Component {
       <div className="app">
         <Routes>
           <Route exact path="/" element={<Navigate replace to='/workspace/report' />} />
+          <Route path="login" element={<Login onLoginSuccess={this.onLoginSuccess} />} />
           <Route path="workspace/*" element={
               <Workspace  />
           } />
