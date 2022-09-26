@@ -1,7 +1,7 @@
 import PocketBase from 'pocketbase'
 import {toast} from "react-toastify";
 
-export const client = new PocketBase('http://localhost:8090');
+export const client = new PocketBase('https://pocketapp.fly.dev');
 
 const camelToSnakeCase = str =>
     str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);

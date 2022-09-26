@@ -68,7 +68,7 @@ class App extends React.Component {
   }
 
   configAxiosInterceptors = () => {
-    axios.defaults.baseURL = 'http://localhost:8090/';
+    axios.defaults.baseURL = 'https://pocketapp.fly.dev/';
 
     axios.interceptors.response.use((response) => {
         return response;
