@@ -58,8 +58,13 @@ class App extends React.Component {
   }
 
   onLoginSuccess = (loginResponse = {}) => {
-        let directUrl = '/workspace/report';
-        this.props.navigate(directUrl);
+    let directUrl = '/workspace/report';
+    this.props.navigate(directUrl);
+  }
+
+  onLogout = () => {
+    client.authStore.clear();
+    this.props.navigate('/login');
   }
 
   configAxiosInterceptors = () => {
@@ -115,7 +120,7 @@ class App extends React.Component {
           <Route exact path="/" element={<Navigate replace to='/workspace/report' />} />
           <Route path="login" element={<Login onLoginSuccess={this.onLoginSuccess} />} />
           <Route path="workspace/*" element={
-              <Workspace  />
+            <Workspace onLogout={this.onLogout} />
           } />
           <Route element={<PageNotFound />} />
         </Routes>

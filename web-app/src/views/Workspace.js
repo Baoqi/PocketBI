@@ -112,7 +112,11 @@ class Workspace extends React.Component {
       currentMenuLink,
       menutItems
     } = this.state;
-    
+
+    const {
+      onLogout
+    } = this.props;
+
     let menuItems = [];
     let menuList = menutItems;
 
@@ -155,6 +159,11 @@ class Workspace extends React.Component {
           <div className="workspace-name">{t('Poli')}</div>
           <div className="workspace-nav-menu">
             {menuItems}
+          </div>
+          <div className="workspace-account-menu">
+            <div className="workspace-nav-menu-text workspace-account-button" onClick={onLogout}>
+              {t('Logout')}
+            </div>
           </div>
         </div>
         <div className="workspace-content">
