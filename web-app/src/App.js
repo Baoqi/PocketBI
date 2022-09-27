@@ -52,13 +52,15 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.configAxiosInterceptors();
     this.configPocketBaseApi();
+    this.configAxiosInterceptors();
+    this.configAxiosAuthHeader();
     this.configLocaleLanguage();
   }
 
   onLoginSuccess = (loginResponse = {}) => {
     let directUrl = '/workspace/report';
+    this.configAxiosAuthHeader();
     this.props.navigate(directUrl);
   }
 
@@ -77,6 +79,13 @@ class App extends React.Component {
         toast.error(() => <div className="toast-msg-body">{readableServerError}</div>);
         return Promise.reject(error);
     });
+  }
+
+  configAxiosAuthHeader = () => {
+    if (client.authStore.isValid) {
+      // currently only admin is supported
+      axios.defaults.headers.common['Authorization'] = `Admin ${client.authStore.token}`;
+    }
   }
 
   configPocketBaseApi = () => {
