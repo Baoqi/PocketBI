@@ -83,8 +83,7 @@ class App extends React.Component {
 
   configAxiosAuthHeader = () => {
     if (client.authStore.isValid) {
-      // currently only admin is supported
-      axios.defaults.headers.common['Authorization'] = `Admin ${client.authStore.token}`;
+      axios.defaults.headers.common['Authorization'] = `User ${client.authStore.token}`;
     }
   }
 

@@ -5,7 +5,6 @@ import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import './Login.css';
-import Checkbox from '../../components/Checkbox/Checkbox';
 import {client} from "../../api/PocketBaseApi";
 
 class Login extends React.Component {
@@ -14,8 +13,7 @@ class Login extends React.Component {
         super(props);
         this.state = {
             username: '',
-            password: '',
-            isAdmin: true
+            password: ''
         };
     }
 
@@ -56,8 +54,7 @@ class Login extends React.Component {
     login = () => {
         const {
             username,
-            password,
-            isAdmin
+            password
         } = this.state;
 
         if (!username) {
@@ -70,11 +67,7 @@ class Login extends React.Component {
             return;
         }
 
-        let authSource = client.users;
-        if (isAdmin) {
-            authSource = client.admins;
-        }
-        authSource.authViaEmail(username, password)
+        client.users.authViaEmail(username, password)
             .then(res => {
                 if (res.token) {
                     this.props.onLoginSuccess(res);
@@ -112,9 +105,6 @@ class Login extends React.Component {
                                 value={this.state.password}
                                 onChange={this.handleInputChange}
                             />
-                            <div style={{marginBottom: '8px'}}>
-                                <Checkbox name="isAdmin" value={t('Is Admin')} checked={this.state.isAdmin} onChange={this.handleCheckBoxChange} />
-                            </div>
                             <button className="button login-button button-green"onClick={this.login}>{t('Login')}</button>
                         </div>
                     </div>
