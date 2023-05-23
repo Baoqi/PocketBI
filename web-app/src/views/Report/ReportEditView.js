@@ -165,14 +165,16 @@ class ReportEditView extends React.Component {
         filter: `name="${reportName}"`
       })
         .then(res => {
-          const result = res;
-          this.setState({
-            reportId: result.id,
-            name: result.name,
-            style: result.style
-          }, () => {
-            this.refresh();
-          });
+          if (res?.length > 0) {
+            const result = res[0];
+            this.setState({
+              reportId: result.id,
+              name: result.name,
+              style: result.style
+            }, () => {
+              this.refresh();
+            });
+          }
         });
     });
   }
