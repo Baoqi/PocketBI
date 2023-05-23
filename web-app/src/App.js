@@ -20,6 +20,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 import { withTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
+import 'antd/dist/reset.css';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 
