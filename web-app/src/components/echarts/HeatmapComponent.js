@@ -87,7 +87,7 @@ class HeatmapComponent extends BaseEChartsComponent {
 
         let min = Number.MAX_VALUE;
         let max = Number.MIN_VALUE;
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data?.length; i++) {
             const row = data[i];
             const xAxisVal = row[xAxis];
             const yAxisVal = row[yAxis];
@@ -96,13 +96,13 @@ class HeatmapComponent extends BaseEChartsComponent {
             let xIndex = xAxisData.findIndex(a => a === xAxisVal);
             if (xIndex === -1) {
                 xAxisData.push(xAxisVal);
-                xIndex = xAxisData.length - 1;
+                xIndex = xAxisData?.length - 1;
             }
 
             let yIndex = yAxisData.findIndex(a => a === yAxisVal);
             if (yIndex === -1) {
                 yAxisData.push(yAxisVal);
-                yIndex = yAxisData.length - 1;
+                yIndex = yAxisData?.length - 1;
             }
 
             if (seriesVal < min) {

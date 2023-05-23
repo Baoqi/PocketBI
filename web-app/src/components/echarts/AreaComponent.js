@@ -65,7 +65,7 @@ class AreaComponent extends BaseEChartsComponent {
             } = dataListToGrid(data, xAxis, yAxis, legend, multiSeriesDefaultValue);
 
             // From grid to series list.
-            for (let i = 0; i < legendList.length; i++) {
+            for (let i = 0; i < legendList?.length; i++) {
                 const series = {
                     name: legendList[i],
                     type: type,
@@ -73,7 +73,7 @@ class AreaComponent extends BaseEChartsComponent {
                     areaStyle: {},
                     smooth: isSmooth
                 };
-                for (let j = 0; j < xAxisList.length; j++) {
+                for (let j = 0; j < xAxisList?.length; j++) {
                     series.data.push(grid[i][j]);
                 }
                 seriesData.push(series);
@@ -82,7 +82,7 @@ class AreaComponent extends BaseEChartsComponent {
             return getAreaOptionTemplate(colorPlatte, legendList, xAxisList, seriesData, config);
         } else {
             const xAxisData = [];
-            for (let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data?.length; i++) {
                 const row = data[i];
                 xAxisData.push(row[xAxis]);
                 seriesData.push(row[yAxis]);

@@ -13,7 +13,7 @@ function Kanban(props) {
   } = props;
 
   const groupData = [];
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < data?.length; i++) {
     const row = data[i];
     const index = groupData.findIndex(g => g.groupBy === row[groupByField]);
     if (index === -1) {
@@ -27,14 +27,14 @@ function Kanban(props) {
   }
 
   const groupPanelItems = [];
-  for (let i = 0; i < groupData.length; i++) {
+  for (let i = 0; i < groupData?.length; i++) {
     const {
       groupBy,
       blocks
     } = groupData[i];
      
     const blockItems = [];
-    for (let j = 0; j < blocks.length; j++) {
+    for (let j = 0; j < blocks?.length; j++) {
       const blockRowItems = [];
       let blockTitleValue = null;
       for (let [key, value] of Object.entries(blocks[j])) {

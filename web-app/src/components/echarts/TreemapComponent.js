@@ -11,7 +11,7 @@ class TreemapComponent extends BaseEChartsComponent {
             colorPlatte
         } = config;
         const seriesData = [];
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data?.length; i++) {
             const row = data[i];
             seriesData.push({
                 name: row[key],

@@ -38,7 +38,7 @@ class Table extends React.PureComponent {
         Header: columnName,
         accessor: columnName
       };
-      if (drillThrough.length > 0) {
+      if (drillThrough?.length > 0) {
         const index = drillThrough.findIndex(d => d.columnName === columnName);
         if (index !== -1) {
           const reportId = drillThrough[index].reportId;
@@ -60,13 +60,13 @@ class Table extends React.PureComponent {
       );
     }
 
-    if (data.length === 0 || columns.length === 0) {
+    if (data?.length === 0 || columns?.length === 0) {
       return (
         <div style={{padding: '10px'}}>No data</div>
       );
     }
 
-    const pageSize = showPagination ? undefined : data.length;
+    const pageSize = showPagination ? undefined : data?.length;
     const style = height ? {
       height: height + 'px'
     } : {};

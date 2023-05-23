@@ -84,7 +84,7 @@ class BarComponent extends BaseEChartsComponent {
             } = dataListToGrid(data, xAxis, yAxis, legend, multiSeriesDefaultValue);
 
             // From grid to series list.
-            for (let i = 0; i < legendList.length; i++) {
+            for (let i = 0; i < legendList?.length; i++) {
                 const series = {
                     name: legendList[i],
                     type: 'bar',
@@ -93,7 +93,7 @@ class BarComponent extends BaseEChartsComponent {
                 if (isStacked) {
                     series.stack = title || 'Empty';
                 }
-                for (let j = 0; j < xAxisList.length; j++) {
+                for (let j = 0; j < xAxisList?.length; j++) {
                     series.data.push(grid[i][j]);
                 }
                 seriesData.push(series);
@@ -102,7 +102,7 @@ class BarComponent extends BaseEChartsComponent {
             return getBarOptionTemplate(colorPlatte, legendList, xAxisList, seriesData, config);
         } else {
             const xAxisData = [];
-            for (let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data?.length; i++) {
                 const row = data[i];
                 xAxisData.push(row[xAxis]);
                 seriesData.push(row[yAxis]);
