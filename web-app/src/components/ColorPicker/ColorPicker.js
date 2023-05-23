@@ -1,58 +1,29 @@
 import React from 'react';
-import { ChromePicker } from 'react-color';
-import './ColorPicker.css'
+import { ColorPicker as AntdColorPicker } from 'antd';
+import PropTypes from "prop-types";
 
-class ColorPicker extends React.Component {
+function ColorPicker(props) {
+  const {
+    name,
+    value,
+    onChange
+  } = props;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      showPalette: false
-    }
-  }
-
-  handleClick = () => {
-    this.setState(prevState => ({
-      showPalette: !prevState.showPalette
-    })); 
-  };
-
-  handleChange = (color) => {
-    const { name } = this.props;
-    const rgb = color.rgb;
+  const handleChange = (color, hex) => {
+    const rgb = color.toRgb();
     const rgba = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`;
-    this.props.onChange(name, rgba);
+    onChange(name, rgba);
   };
 
-  close = () => {
-    this.setState({
-      showPalette: false
-    }); 
-  }
-
-  render() {
-
-    const color = {
-      background: this.props.value
-    };
-
-    return (
-      <div>
-        <div className="colorpicker-select" onClick={this.handleClick}>
-          <div className="colorpicker-color" style={color}></div>
-        </div>
-        { this.state.showPalette && (
-          <div>
-            <div className="colorpicker-overlay" onClick={this.close}>
-            </div>
-            <div className="colorpicker-popover">
-              <ChromePicker color={this.props.value} onChange={this.handleChange} />
-            </div>
-          </div>
-        )}
-      </div>
-    )
-  };
+  return (
+      <AntdColorPicker name={name} value={value} onChange={handleChange} />
+  );
 }
+
+ColorPicker.propTypes = {
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired
+};
 
 export default ColorPicker;
