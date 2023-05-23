@@ -67,7 +67,7 @@ class Login extends React.Component {
             return;
         }
 
-        client.users.authViaEmail(username, password)
+        client.collection('users').authWithPassword(username, password)
             .then(res => {
                 if (res.token) {
                     this.props.onLoginSuccess(res);

@@ -1,7 +1,9 @@
 import PocketBase from 'pocketbase'
 import {toast} from "react-toastify";
 
-export const client = new PocketBase('https://pocketapp.fly.dev');
+export const PB_BASE_URL = 'https://pocketapp.fly.dev';
+
+export const client = new PocketBase(PB_BASE_URL);
 
 const camelToSnakeCase = str =>
     str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
@@ -31,25 +33,25 @@ const handleRequest = _handleBuilder(camelToSnakeCase);
 
 
 export const getOneRecord = (sub, id, queryParams) => {
-    return client.records.getOne(sub, id, queryParams)
+    return client.collection(sub).getOne(id, queryParams)
         .then(handleResponse)
         .catch(err => toast.error(err.message));
 }
 
 export const createRecord = (sub, bodyParams, queryParams) => {
-    return client.records.create(sub, handleRequest(bodyParams), queryParams)
+    return client.collection(sub).create(handleRequest(bodyParams), queryParams)
         .then(handleResponse)
         .catch(err => toast.error(err.message));
 }
 
 export const updateRecord = (sub, id, bodyParams, queryParams) => {
-    return client.records.update(sub, id, handleRequest(bodyParams), queryParams)
+    return client.collection(sub).update(id, handleRequest(bodyParams), queryParams)
         .then(handleResponse)
         .catch(err => toast.error(err.message));
 }
 
 export const getFullRecordList = (sub, queryParams) => {
-    return client.records.getFullList(sub, 100, queryParams)
+    return client.collection(sub).getFullList(100, queryParams)
         .then(items => {
             if (items) {
                 let newItems = [];
@@ -63,7 +65,7 @@ export const getFullRecordList = (sub, queryParams) => {
 }
 
 export const deleteOneRecord = (sub, id, queryParams) => {
-    return client.records.delete(sub, id, queryParams)
+    return client.collection(sub).delete(id, queryParams)
         .then(handleResponse)
         .catch(err => toast.error(err.message));
 }

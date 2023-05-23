@@ -29,7 +29,7 @@ import Workspace from './views/Workspace';
 import PageNotFound from './views/PageNotFound';
 import Login from './views/Login/Login';
 import * as Util from './api/Util';
-import {client} from "./api/PocketBaseApi";
+import {client, PB_BASE_URL} from "./api/PocketBaseApi";
 
 
 library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
@@ -70,7 +70,7 @@ class App extends React.Component {
   }
 
   configAxiosInterceptors = () => {
-    axios.defaults.baseURL = 'https://pocketapp.fly.dev/';
+    axios.defaults.baseURL = PB_BASE_URL;
 
     axios.interceptors.response.use((response) => {
         return response;
@@ -83,7 +83,7 @@ class App extends React.Component {
 
   configAxiosAuthHeader = () => {
     if (client.authStore.isValid) {
-      axios.defaults.headers.common['Authorization'] = `User ${client.authStore.token}`;
+      axios.defaults.headers.common['Authorization'] = `${client.authStore.token}`;
     }
   }
 
