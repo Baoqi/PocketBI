@@ -210,19 +210,19 @@ class ReportEditView extends React.Component {
     }
   }
 
-  refresh = () => {
-    this.refreshDataSources();
+  refresh = async () => {
+    await this.refreshDataSources();
     this.refreshComponentView();
     this.updateLastRefreshed();
   }
 
-  refreshDataSources = () => {
+  refreshDataSources = async () => {
     const {
       reportType
     } = this.state;
 
     if (reportType === Constants.ADHOC) {
-      getFullRecordList('vis_datasource')
+      await getFullRecordList('vis_datasource')
           .then(res => {
             const jdbcDataSources = res;
             this.setState({
