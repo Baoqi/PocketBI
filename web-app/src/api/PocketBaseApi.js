@@ -1,7 +1,7 @@
 import PocketBase from 'pocketbase'
 import {toast} from "react-toastify";
 
-export const PB_BASE_URL = 'https://pocketapp.fly.dev';
+export const PB_BASE_URL = '/';
 
 export const client = new PocketBase(PB_BASE_URL);
 
