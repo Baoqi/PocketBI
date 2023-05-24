@@ -20,7 +20,6 @@
     "react-i18next": "^11.18.3",
     "react-router-dom": "^6.3.0",
     "react-scripts": "3.4.1",
-    "react-select": "^5.4.0",
     "react-toastify": "^5.5.0"
   },
   "scripts": {
