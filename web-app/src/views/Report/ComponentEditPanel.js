@@ -21,6 +21,7 @@ import SelectButtons from '../../components/SelectButtons/SelectButtons';
 import InputRange from '../../components/filters/InputRange';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Checkbox from '../../components/Checkbox/Checkbox';
+import { Modal } from 'antd';
 import { getEChartsComponent } from "../../components/echarts/ComponentFactory";
 import {createRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
 import {findItemById} from "../../api/Util";
@@ -721,7 +722,7 @@ class ComponentEditPanel extends React.Component {
       }
     });
 
-    return (
+    let innerContent = (
       <div>
         <button className="button button-green" onClick={this.save}>
           <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
@@ -933,6 +934,18 @@ class ComponentEditPanel extends React.Component {
           </Tabs>
         </div>
       </div>
+    );
+    return (
+        <Modal
+          open={this.props.open}
+          onCancel={this.props.onCancel}
+          footer={null}
+          width={960}
+          style={{ top: 10 }}
+          maskClosable={false}
+          title={this.props.t('Component')} >
+          {innerContent}
+        </Modal>
     )
   };
 }

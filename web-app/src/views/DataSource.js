@@ -275,6 +275,9 @@ class DataSource extends Component {
           open={this.state.showEditPanel}
           onOk={this.save}
           onCancel={this.closeEditPanel}
+          maskClosable={false}
+          width={560}
+          style={{ top: 10 }}
           title={t(mode)}
           okText={t('Save')} >
 

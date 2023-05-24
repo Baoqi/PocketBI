@@ -633,19 +633,15 @@ class ReportEditView extends React.Component {
           {...this.state.style}
         />
 
-        <Modal 
-          open={this.state.showComponentEditPanel}
-          onCancel={() => this.setState({ showComponentEditPanel: false })}
-          footer={null}
-          title={t('Component')} >
-          <ComponentEditPanel 
+        <ComponentEditPanel
+            open={this.state.showComponentEditPanel}
+            onCancel={() => this.setState({ showComponentEditPanel: false })}
             ref={this.componentEditPanel} 
             jdbcDataSourceOptions={this.state.jdbcDataSourceOptions}
             jdbcDataSources={this.state.jdbcDataSources}
             reportId={this.state.reportId}
             onSave={this.onComponentSave}
-          />
-        </Modal>
+        />
 
         <Modal 
           open={this.state.showConfirmDeletionPanel}

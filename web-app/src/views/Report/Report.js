@@ -332,6 +332,7 @@ class Report extends Component {
           onCancel={() => this.setState({ showEditPanel: false })}
           onOk={this.save}
           okText={t('Save')}
+          maskClosable={false}
           title={t('New')} >
           <div className="form-panel">
             <label>{t('Name')}</label>
