@@ -1,27 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class InnerHtml extends React.Component {
+function InnerHtml(props) {
+  const {
+    html,
+    style
+  } = props;
 
-  static propTypes = {
-    html: PropTypes.string.isRequired,
-    style: PropTypes.object
-  };
-
-  render() {
-    const {
-      html,
-      style
-    } = this.props;
-
-    const markup = {
-      __html: html
-    }
-
-    return (
-      <div dangerouslySetInnerHTML={markup} style={style} />
-    );
+  const markup = {
+    __html: html
   }
+
+  return (
+      <div dangerouslySetInnerHTML={markup} style={style} />
+  );
 }
+
+InnerHtml.propTypes = {
+  html: PropTypes.string.isRequired,
+  style: PropTypes.object
+};
 
 export default InnerHtml;
