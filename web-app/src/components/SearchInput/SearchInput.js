@@ -1,66 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './SearchInput.css';
+import { Input } from 'antd';
+const { Search } = Input;
 
-class SearchInput extends React.Component {
+function SearchInput(props) {
+  const {
+    name,
+    value,
+    inputWidth,
+    onChange
+  } = props;
 
-  constructor(props) {
-    super(props);
-    this.state = {};
+  let inputStyle = {};
+  if (inputWidth) {
+    inputStyle.width = inputWidth + 'px';
   }
 
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    inputWidth: PropTypes.number
-  };
-
-  handleInputChange = (event) => {
-    const { name } = this.props;
-    const value = event.target.value;
-    this.props.onChange(name, value);
-  }
-
-  reset = () => {
-    const { name } = this.props;
-    this.props.onChange(name, '');
-  }
-
-  render() {
-    const {
-      name,
-      value,
-      inputWidth
-    } = this.props;
-
-    let inputStyle = {};
-    if (inputWidth) {
-      inputStyle.width = inputWidth + 'px';
-    }
-
-    return (
-      <div className="search-input-container">
-        <div className="search-input-icon">
-          <FontAwesomeIcon icon="search" style={{margin: '8px'}} />
-        </div>
-        <input
-          type="text"
-          name={name}
-          value={value}
-          onChange={this.handleInputChange}
-          className="search-input-input"
-          style={inputStyle}
-        />
-        <button className="button search-input-reset-button" onClick={this.reset}>
-          { value && (
-            <FontAwesomeIcon icon="times" size="lg" />
-          )}
-        </button>
-      </div>
-    );
-  }
+  return (
+      <Search placeholder="" value={value} onChange={e => onChange(name, e.target.value)} style={inputStyle} enterButton allowClear />
+  )
 }
+
+SearchInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  inputWidth: PropTypes.number
+};
 
 export default SearchInput;
