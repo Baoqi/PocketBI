@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import ComponentViewPanel from './ComponentViewPanel';
 import ComponentEditPanel from './ComponentEditPanel';
 
-import Modal from '../../components/Modal/Modal';
+import { Modal } from 'antd';
 import ColorPicker from '../../components/ColorPicker/ColorPicker';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import { withRouter } from '../../components/routing/RouterUtil';
@@ -634,9 +634,9 @@ class ReportEditView extends React.Component {
         />
 
         <Modal 
-          show={this.state.showComponentEditPanel}
-          onClose={() => this.setState({ showComponentEditPanel: false })}
-          modalClass={'report-edit-component-dialog'} 
+          open={this.state.showComponentEditPanel}
+          onCancel={() => this.setState({ showComponentEditPanel: false })}
+          footer={null}
           title={t('Component')} >
           <ComponentEditPanel 
             ref={this.componentEditPanel} 
@@ -648,14 +648,14 @@ class ReportEditView extends React.Component {
         </Modal>
 
         <Modal 
-          show={this.state.showConfirmDeletionPanel}
-          onClose={this.closeConfirmDeletionPanel}
-          modalClass={'small-modal-panel'}
+          open={this.state.showConfirmDeletionPanel}
+          onCancel={this.closeConfirmDeletionPanel}
+          onOk={this.confirmDelete}
+          okText={t('Delete')}
           title={t('Confirm Deletion')}>
           <div className="confirm-deletion-panel">
             {t('Are you sure you want to delete')} {this.state.objectToDelete.name}?
           </div>
-          <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
         </Modal>
 
         {isEditMode && (

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
-import Modal from '../components/Modal/Modal';
+import { Modal } from 'antd';
 import SearchInput from '../components/SearchInput/SearchInput';
 import {createRecord, deleteOneRecord, getFullRecordList, updateRecord} from "../api/PocketBaseApi";
 import {findItemById} from "../api/Util";
@@ -272,10 +272,11 @@ class DataSource extends Component {
         </div>
 
         <Modal 
-          show={this.state.showEditPanel}
-          onClose={this.closeEditPanel}
-          modalClass={'small-modal-panel'}
-          title={t(mode)} >
+          open={this.state.showEditPanel}
+          onOk={this.save}
+          onCancel={this.closeEditPanel}
+          title={t(mode)}
+          okText={t('Save')} >
 
           <div className="form-panel">
             <label>{t('Name')} <span className="required">*</span></label>
@@ -342,21 +343,18 @@ class DataSource extends Component {
               value={this.state.ping}
               onChange={this.handleInputChange} 
             />
-            <button className="button mt-3 button-green" onClick={this.save}>
-              <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
-            </button>
           </div>
         </Modal>
 
         <Modal 
-          show={showConfirmDeletionPanel}
-          onClose={this.closeConfirmDeletionPanel}
-          modalClass={'small-modal-panel'}
-          title={t('Confirm Deletion')} >
+          open={showConfirmDeletionPanel}
+          onCancel={this.closeConfirmDeletionPanel}
+          onOk={this.confirmDelete}
+          title={t('Confirm Deletion')}
+          okText={t('Delete')} >
           <div className="confirm-deletion-panel">
             {t('Are you sure you want to delete')} {objectToDelete.name}?
           </div>
-          <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
         </Modal>
       </div>
     );

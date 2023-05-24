@@ -8,8 +8,7 @@ import { toast } from 'react-toastify';
 import './Report.css';
 import * as Constants from '../../api/Constants';
 import ReportEditView from './ReportEditView';
-import Modal from '../../components/Modal/Modal';
-//import Tabs from '../../components/Tabs/Tabs';
+import { Modal } from 'antd';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import { withRouter } from '../../components/routing/RouterUtil';
 import {createRecord, getFullRecordList} from "../../api/PocketBaseApi";
@@ -329,9 +328,10 @@ class Report extends Component {
         </div>
 
         <Modal 
-          show={this.state.showEditPanel}
-          onClose={() => this.setState({ showEditPanel: false })}
-          modalClass={'small-modal-panel'} 
+          open={this.state.showEditPanel}
+          onCancel={() => this.setState({ showEditPanel: false })}
+          onOk={this.save}
+          okText={t('Save')}
           title={t('New')} >
           <div className="form-panel">
             <label>{t('Name')}</label>
@@ -351,10 +351,6 @@ class Report extends Component {
               value={this.state.project}
               onChange={this.handleInputChange} 
             />
-
-            <button className="button button-green" onClick={this.save}>
-              <FontAwesomeIcon icon="save"  fixedWidth /> {t('Save')}
-            </button>
           </div>
         </Modal>
 

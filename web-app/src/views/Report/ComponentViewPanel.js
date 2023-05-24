@@ -13,7 +13,7 @@ import './ComponentViewPanel.css';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import ColorPicker from '../../components/ColorPicker/ColorPicker';
 import InputRange from '../../components/filters/InputRange';
-import Modal from '../../components/Modal/Modal';
+import { Modal } from 'antd';
 import GridLayout from '../../components/GridLayout';
 import {deleteOneRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
 import {findItemById, isStringTrimEmpty} from "../../api/Util";
@@ -745,20 +745,21 @@ class ComponentViewPanel extends React.Component {
         />
         
         <Modal 
-          show={this.state.showConfirmDeletionPanel}
-          onClose={this.closeConfirmDeletionPanel}
-          modalClass={'small-modal-panel'}
+          open={this.state.showConfirmDeletionPanel}
+          onCancel={this.closeConfirmDeletionPanel}
+          onOk={this.confirmDelete}
+          okText={t('Delete')}
           title={t('Confirm Deletion')} >
           <div className="confirm-deletion-panel">
             {t('Are you sure you want to delete this component?')}
           </div>
-          <button className="button button-red full-width" onClick={this.confirmDelete}>{t('Delete')}</button>
         </Modal>
 
         <Modal 
-          show={this.state.showExportCsvPanel}
-          onClose={() => this.setState({ showExportCsvPanel: false })}
-          modalClass={'small-modal-panel'} 
+          open={this.state.showExportCsvPanel}
+          onCancel={() => this.setState({ showExportCsvPanel: false })}
+          onOk={this.downloadCsv}
+          okText={t('Export')}
           title={t('Export as CSV')} >
           <div className="form-panel">
             <label>{t('File Name')}</label>
@@ -769,9 +770,6 @@ class ComponentViewPanel extends React.Component {
               value={this.state.csvFilename}
               onChange={this.handleInputChange} 
             />
-            <button className="button button-green" onClick={this.downloadCsv}>
-              <FontAwesomeIcon icon="file-download"  fixedWidth /> {t('Export')}
-            </button>
           </div>
         </Modal>
 
