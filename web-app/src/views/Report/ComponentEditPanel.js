@@ -11,7 +11,6 @@ import { withTranslation } from 'react-i18next';
 
 import './ComponentEditPanel.css';
 
-import * as Util from '../../api/Util';
 import * as Constants from '../../api/Constants';
 
 import Tabs from '../../components/Tabs/Tabs';
