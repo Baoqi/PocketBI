@@ -1,61 +1,45 @@
 import React from 'react';
-import './Tabs.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Tabs as AntdTabs } from 'antd';
 
-class Tabs extends React.Component {
+function Tabs(props) {
+  const {
+    activeTab,
+    children,
+    onTabChange
+  } = props;
 
-  handleTabClick = (title) => {
-    this.props.onTabChange(title);
-  }
+  const tabItems = [];
+  for (let i = 0; i < children.length; i++) {
+    if (children[i]) {
+      const {
+        title,
+        icon,
+        iconOnly = false
+      } = children[i].props;
 
-  render() {
-    const {
-      activeTab,
-      children,
-      showTabBgColor = false
-    } = this.props;
-
-    const tabHeaders = [];
-    let tabContent = null;
-    for (let i = 0; i < children.length; i++) {
-      if (children[i]) {
-        const { 
-          title,
-          icon,
-          iconOnly = false
-        } = children[i].props;
-        
-        let active = '';
-        let tabStyle = {};
-        if (title === activeTab) {
-          active = 'tab-header-active';
-          tabContent = children[i].props.children;
-          tabStyle = showTabBgColor ? {backgroundColor: '#FFFFFF'} : {};
-        }
-
-        tabHeaders.push(
-          <li className={`tab-header-item ${active}`} style={tabStyle} key={title} onClick={() => this.handleTabClick(title)}>
-            { iconOnly ? (
-              <FontAwesomeIcon icon={icon} title={title} size="lg" />
-            ) : (
-              <React.Fragment>{title}</React.Fragment>
-            )}
-          </li>
-        );
+      let item = {
+        label: title,
+        key: title,
+        children: children[i]
       }
+
+      if (iconOnly) {
+        item.label = (<FontAwesomeIcon icon={icon} title={title} size="lg" />)
+      }
+
+      tabItems.push(item);
     }
-    
-    return (
-      <div className="tab-container">
-        <ul className="tab-header">
-          {tabHeaders}
-        </ul>
-        <div className="tab-content">
-          {tabContent}
-        </div>
-      </div>
-    );
   }
+    
+  return (
+      <AntdTabs
+          activeKey={activeTab}
+          type="card"
+          items={tabItems}
+          onChange={onTabChange}
+      />
+  );
 }
 
 export default Tabs;
