@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Radio } from 'antd';
 import './SelectButtons.css';
 
 function SelectButtons(props) {
@@ -16,16 +17,16 @@ function SelectButtons(props) {
       display,
       value: actualValue
     } = selections[i];
-    const activeClass = actualValue === value ? 'select-button-active' : '';
     buttonItems.push(
-        <div className={`select-button ${activeClass}`} onClick={() => onChange(name, actualValue)} key={actualValue}>{display}</div>
-    )
+        <Radio.Button value={actualValue} key={actualValue}>{display}</Radio.Button>
+    );
   }
 
+
   return (
-      <div className="selectbuttons-container">
+      <Radio.Group size='large' buttonStyle='solid' value={value} onChange={(e) => onChange(name, e.target.value)}>
         {buttonItems}
-      </div>
+      </Radio.Group>
   );
 }
 
