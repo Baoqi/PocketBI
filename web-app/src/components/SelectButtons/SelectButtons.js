@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Radio } from 'antd';
-import './SelectButtons.css';
 
 function SelectButtons(props) {
   const {
