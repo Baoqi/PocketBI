@@ -106,20 +106,18 @@ class App extends React.Component {
       return;
     }
 
-    /*
-    axios.get('/info/general')
-      .then(res => {
-        const info = res.data;
-        const {
-          localeLanguage
-        } = info;
-        const { i18n } = this.props;
-        i18n.changeLanguage(String(localeLanguage));
-        this.setState({
-          localeLanguage: localeLanguage
-        });
+    const { i18n } = this.props;
+    let languageToUse = localStorage.getItem('localeLanguage');
+    if (!languageToUse) {
+      languageToUse = navigator.language || navigator.userLanguage;
+    }
+
+    if (languageToUse) {
+      i18n.changeLanguage(languageToUse);
+      this.setState({
+        localeLanguage: languageToUse
       });
-     */
+    }
   }
 
   render() {

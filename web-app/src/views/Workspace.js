@@ -11,6 +11,7 @@ import { withRouter } from '../components/routing/RouterUtil';
 import './Workspace.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Select } from 'antd';
 
 const MENU_ITEMS = [
   {
@@ -152,6 +153,8 @@ class Workspace extends React.Component {
         )
       );
     }
+    // read localeLanguage from localStorage
+    const languageToUse = localStorage.getItem('localeLanguage') || navigator.language || navigator.userLanguage ;
 
     return (
       <React.Fragment>
@@ -161,6 +164,17 @@ class Workspace extends React.Component {
             {menuItems}
           </div>
           <div className="workspace-account-menu">
+            <div className="workspace-nav-menu-text workspace-account-button">
+              <Select options={[
+                { value: 'en', label: 'English' },
+                { value: 'es', label: 'Español'},
+                { value: 'fr', label: 'Français'},
+                { value: 'zh', label: '中文'}
+              ]} value={languageToUse} onChange={v => {
+                localStorage.setItem('localeLanguage', v);
+                window.location.reload();
+              }} />
+            </div>
             <div className="workspace-nav-menu-text workspace-account-button" onClick={onLogout}>
               {t('Logout')}
             </div>
