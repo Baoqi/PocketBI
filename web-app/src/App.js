@@ -121,7 +121,7 @@ class App extends React.Component {
       });
      */
   }
-   
+
   render() {
     return (
       <div className="app">
@@ -129,7 +129,9 @@ class App extends React.Component {
           <Route exact path="/" element={<Navigate replace to='/workspace/report' />} />
           <Route path="login" element={<Login onLoginSuccess={this.onLoginSuccess} />} />
           <Route path="workspace/*" element={
-            <Workspace onLogout={this.onLogout} />
+              client.authStore.isValid ?
+                  (<Workspace onLogout={this.onLogout} />) :
+                  (<Navigate replace to='/login' />)
           } />
           <Route element={<PageNotFound />} />
         </Routes>
