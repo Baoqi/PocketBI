@@ -320,44 +320,6 @@ h1 {
   font-size: 15px;
 }
 
-/* Talbe */
-.poli-table-panel {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.poli-table {
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
-  vertical-align: middle;
-  border: 1px solid #ccc;
-  background-color: #FFFFFF;
-}
-
-.poli-table thead tr {
-  border-bottom: 2px solid #0065FF;
-}
-
-.poli-table th, td {
-  font-size: 15px;
-  padding: 5px 8px;
-  vertical-align: inherit;
-  white-space: nowrap;
-}
-
-.poli-table td {
-  border-bottom: 1px solid #ccc;
-  font-size: 15px;
-  font-weight: normal;
-}
-
-.poli-table th {
-  font-size: 16px !important;
-  padding: 5px 8px;
-  font-weight: bold;
-}
-
 
 .button-blue {
   background-color: #0065FF !important;

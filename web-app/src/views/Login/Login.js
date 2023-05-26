@@ -86,7 +86,7 @@ class Login extends React.Component {
         return (
             <div className="login-view">
                 <div className="login-panel">
-                    <div className="login-app-title">{t('Poli')}</div>
+                    <div className="login-app-title">{t('PocketBI')}</div>
                     <div className="login-panel-body">
                         <div className="form-panel">
                             <label>{t('Username')}</label>

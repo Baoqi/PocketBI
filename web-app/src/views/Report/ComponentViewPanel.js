@@ -657,7 +657,7 @@ class ComponentViewPanel extends React.Component {
     return selectedComponent;
   }
 
-  onComponentCsvExport = (title = 'poli', columns = [], data = []) => {
+  onComponentCsvExport = (title = 'PocketBI', columns = [], data = []) => {
     this.setState({
       csvFilename: title,
       showExportCsvPanel: true,
