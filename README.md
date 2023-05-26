@@ -2,6 +2,8 @@
 
 PocketBI is an easy-to-use low-memory-requirement BI tool! It can run on fly.io free tier shared-cpu-1x VM (256MB memory). 
 
+Note: This project's source code is mainly modified from https://github.com/shzlw/poli/ and port it to work with https://github.com/pocketbase/pocketbase
+
 
 ## Why PocketBI
 
