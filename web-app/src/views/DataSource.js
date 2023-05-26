@@ -205,7 +205,6 @@ class DataSource extends Component {
     const { t } = this.props;
 
     const { 
-      showUpdatePassword,
       id,
       jdbcDataSources = [],
       searchValue,
@@ -291,7 +290,7 @@ class DataSource extends Component {
               onChange={this.handleInputChange} 
             />
 
-            <label>{t('Connection Url')}</label>
+            <label>{t('Connection Url')} <span className="required">*</span></label>
             <textarea
               className="form-input"
               rows="4"
@@ -300,52 +299,6 @@ class DataSource extends Component {
               value={this.state.connectionUrl}
               onChange={this.handleInputChange} >
             </textarea>
-
-            <label>{t('Driver Class Name')}</label>
-            <input 
-              className="form-input"
-              type="text" 
-              name="driverClassName" 
-              value={this.state.driverClassName}
-              onChange={this.handleInputChange} 
-            />
-
-            <label>{t('Username')}</label>
-            <input 
-              className="form-input"
-              type="text" 
-              name="username" 
-              value={this.state.username}
-              onChange={this.handleInputChange} 
-            />
-            
-            { mode === 'Edit' && (
-              <div style={{margin: '3px 0px 8px 0px'}}>
-                <button className="button" onClick={this.toggleUpdatePassword}>{t('Change Password')}</button>
-              </div>
-            )}
-
-            { (mode === 'New' || showUpdatePassword) && ( 
-              <div>
-                <label>{t('New Password')}</label>
-                <input 
-                  className="form-input"
-                  type="password" 
-                  name="password" 
-                  value={this.state.password}
-                  onChange={this.handleInputChange} 
-                />
-              </div>
-            )}
-
-            <label>{t('Ping')}</label>
-            <input 
-              className="form-input"
-              type="text" 
-              name="ping" 
-              value={this.state.ping}
-              onChange={this.handleInputChange} 
-            />
           </div>
         </Modal>
 
