@@ -1,86 +1,118 @@
-# **Poli（魄力）**
+# **PocketBI**
 
-[![Version](https://img.shields.io/badge/Version-0.12.2-0065FF.svg)](#)
-[![license: MIT](https://img.shields.io/badge/license-MIT-FF5630.svg)](https://opensource.org/licenses/MIT)
-[![Download](https://img.shields.io/github/downloads/shzlw/poli/total.svg?color=6554C0)](https://github.com/shzlw/poli/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/zhonglu/poli.svg)](https://cloud.docker.com/u/zhonglu/repository/docker/zhonglu/poli)
-[![Build Status](https://travis-ci.org/shzlw/poli.svg?branch=master)](https://travis-ci.org/shzlw/poli)
-[![codecov](https://codecov.io/gh/shzlw/poli/branch/master/graph/badge.svg)](https://codecov.io/gh/shzlw/poli)
-
-Poli is an easy-to-use SQL reporting application built for SQL lovers!
-
-## Why Poli
-
-#### :zap: Self-hosted & easy setup
-Platform independent web application. Single JAR file + Single SQLite DB file. Get up and running in 5 minutes.
-#### :muscle: Connect to any database supporting JDBC drivers
-PostgreSQL, Oracle, SQL Server, MySQL, Elasticsearch... You name it.
-#### :bulb: SQL editor & schema viewer
-No ETLs, no generated SQL, polish your own SQL query to transform data.
-#### :fire: Rich and flexible styling
-Pixel-perfect positioning + Drag'n'Drop support to customize the reports and charts in your own way.
-#### :bookmark_tabs: Interactive Adhoc report
-Utilize the power of dynamic SQL with query variables to connect Filters and Charts.
-#### :hourglass: Canned report
-Capture the snapshot of historical data. Free up space in your own database.
-#### :santa: User management
-Three system level role configurations + Group based report access control.
-#### :earth_americas: Internationalization
-Custom the language pack and translations just for your audience.
-#### :moneybag: MIT license
-Open and free for all usages.
-#### :gem: Is that all?
-Auto refresh, drill through, fullscreen, embeds, color themes + more features in development.
-
-## What's New ([latest](https://shzlw.github.io/poli/#/change-logs))
+PocketBI is an easy-to-use low-memory-requirement BI tool! It can run on fly.io free tier shared-cpu-1x VM (256MB memory). 
 
 
-![poli v0.8.0](http://66.228.42.235:8080/image-0.8.0/bob_glass_en.jpg)
+## Why PocketBI
 
-## Gallery
+I have some personal data collected in sqlite & postgres, I want to have a simple BI tool to check it from time to time (7 * 24 hour), I wonder whether this can be done free of charge. 
 
-#### Slicer & Charts
+For the hosting part, I use fly.io's free tier (it can host up to 3 shared-cpu-1x VM (256MB memory each)).
 
-![poli v0.5.0](http://66.228.42.235:8080/slicer.gif)
+For the BI part, I found https://github.com/shzlw/poli/ is simple yet useful. But the Java & Sprint Boot will make it require more memory to run.
 
-#### Move & Resize
+Later, I found https://github.com/pocketbase/pocketbase, "Open Source realtime backend in 1 file".
 
-![poli component reposition](http://66.228.42.235:8080/move.gif)
+So, can I combine PocketBase with Poli? Then it comes this PocketBI.
 
-#### Color palette switch & export CSV
 
-![poli v0.6.0](http://66.228.42.235:8080/v0.6.0_new.gif)
+## Start from source code
 
-## Quick Installation
+Requirement:
+  - Node.js (version 16.x +) + yarn
+  - GoLang (version 19.x +)
 
-Windows/Linux
+How to build:
+  1. Build front end: go to web-app folder, and run "yarn build", the generated files will be inside  PocketBI/pb_public
+  2. Build backend: in project's root folder, run: `go build .`, it will generate an executable file: pocketbi
 
-```sh
-java -jar poli-0.12.2.jar
+Then, run the following command to start server:
+```
+./pocketbi serve
 ```
 
-Docker
+## Quick Start
+After start PocketBI, do the following steps
 
-```sh
-docker run -d -p 6688:6688 --name poli zhonglu/poli:0.12.2
+### Step 1. Create a PocketBase Admin account
+
+Open "http://localhost:8090/_/", and create an admin user for manage the whole system.
+
+![image](/images/pocketbase_create_admin_user.png)
+
+### Step 2. Create a Normal User account, which can be used to access BI application
+
+After Step 1, after login to "http://localhost:8090/_/", you can create a normal user account, which can be used to access BI application.
+
+![image](/images/pocketbase_create_normal_user.png)
+
+### Step 3. Login to main site (http://localhost:8090/) by the normal user account
+
+![image](/images/pocketbi_login.png)
+
+### Step 4. Create a new data source
+
+![image](/images/pocketbi_create_datasource.png)
+
+currently, PocketBI support sqlite, clickhouse http and postgres. (more will be added later)
+
+For Sqlite, the connection string is like:
+```
+sqlite:file:/pb_data/data.db?mode=ro
 ```
 
-Check [installation guide](https://shzlw.github.io/poli/#/installation) for more details.
+For Clickhouse, the connection string is like:
+```
+http://127.0.0.1:8123/default?user=default&password=xxxxxx
+```
 
-## Download
+For Postgres, the connection string is like:
+```
+postgres://user_name:password@your_db_host:5432/public?sslmode=require
+```
 
-[Download](https://github.com/shzlw/poli/releases) the latest version of Poli via the github release page.
+### Step 5. Create a new Report
+
+You can then create visualizations based on the data source you created. like:
+
+![image](/images/pocketbi_card_edit.png)
+
+and create a report by adding more components:
+
+![image](/images/pocketbi_report_edit.png)
+
+For more details, please check https://shzlw.github.io/poli/
+
+Poli support the following visualizations types:
+  - Static
+    - Text
+    - Image
+    - Iframe
+    - Html
+  - Chart
+    - Table
+    - Pie
+    - Line
+    - Bar
+    - Area
+    - Card
+    - Funnel
+    - Treemap
+    - Heatmap
+    - Kanban
+  - Filter
+    - Slicer
+    - Single
+    - Date Picker
 
 ## Documentation
 
-Poli's documentation and other information can be found at [here](https://shzlw.github.io/poli/).
+  - For PocketBase part (access from http://localhost:8090/_/ ), please check: https://pocketbase.io/docs/
 
-## Run on GCP
+  - For Poli part(access from http://localhost:8090/) please check https://shzlw.github.io/poli/
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
 
 ## License
 
 MIT License
 
-Copyright (c) Zhonglu Wang
