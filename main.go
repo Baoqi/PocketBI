@@ -5,12 +5,19 @@ import (
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 	"log"
 	"pocketbi/pkg/sqlquery"
+
+	_ "pocketbi/migrations"
 )
 
 func main() {
 	app := pocketbase.New()
+
+	migratecmd.MustRegister(app, app.RootCmd, &migratecmd.Options{
+		Automigrate: true, // auto creates migration files when making collection changes
+	})
 
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		// serves static files from the provided public dir (if exists)
