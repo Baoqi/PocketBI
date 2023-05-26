@@ -14,3 +14,5 @@ src/main/resources/static
 release/
 poli.db
 pb_data/
+pb_public/
+/pocketbi
