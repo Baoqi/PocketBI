@@ -78,3 +78,14 @@ export function convertIVisSpecToSpecification(visSpecs) {
     }
     return specification;
 }
+
+export function loadVisSpecList(vizStore, specList) {
+    let visSpecList= specList || [];
+    if (visSpecList.length > 0) {
+        vizStore.importStoInfo({
+            specList: visSpecList,
+            datasets: [],
+            dataSources: []
+        })
+    }
+}

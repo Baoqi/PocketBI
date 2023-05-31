@@ -17,7 +17,7 @@ import DatePicker from './filters/DatePicker';
 import Card from './widgets/Card';
 import Kanban from './Kanban/Kanban';
 import { getEChartsComponent } from "./echarts/ComponentFactory";
-import {translateToGraphicWalkerFields} from "../api/GraphicWalkerUtil";
+import {loadVisSpecList, translateToGraphicWalkerFields} from "../api/GraphicWalkerUtil";
 import {GraphicWalker} from "@wubaoqi/graphic-walker";
 
 class GridItem extends React.PureComponent {
@@ -167,6 +167,13 @@ class GridItem extends React.PureComponent {
     this.props.onComponentFilterInputChange(componentId, data);
   }
 
+  setGraphicWalkerVizStore = (vizStore) => {
+    let visSpecList= this.props.data?.visSpecList || [];
+    if (visSpecList.length > 0) {
+      loadVisSpecList(vizStore, visSpecList);
+    }
+  }
+
   renderComponentContent = () => {
     const onChartEvents = {
       'click': this.onChartClick,
@@ -259,11 +266,10 @@ class GridItem extends React.PureComponent {
         let fields = translateToGraphicWalkerFields(columns, queryResultData);
         componentItem = (
             <GraphicWalker
-                spec={data?.spec}
                 dataSource={queryResultData}
                 rawFields={fields}
-                keepAlive={true}
                 showChartOnly={true}
+                retrieveVizStore={this.setGraphicWalkerVizStore}
             />
         );
       } else {

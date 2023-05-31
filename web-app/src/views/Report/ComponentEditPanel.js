@@ -26,7 +26,10 @@ import {createRecord, getFullRecordList, getOneRecord, updateRecord} from "../..
 import {findItemById} from "../../api/Util";
 import {GraphicWalker} from "@wubaoqi/graphic-walker";
 import {Modal} from "antd";
-import {convertIVisSpecToSpecification, translateToGraphicWalkerFields} from "../../api/GraphicWalkerUtil";
+import {
+  loadVisSpecList,
+  translateToGraphicWalkerFields
+} from "../../api/GraphicWalkerUtil";
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -266,10 +269,9 @@ class ComponentEditPanel extends React.Component {
 
     if (type === Constants.CHART && subType === Constants.GRAPHIC_WALKER) {
       if (graphicWalkerVizStore) {
-        let visSpec = graphicWalkerVizStore.exportViewSpec();
-        let spec = convertIVisSpecToSpecification(visSpec);
+        let visSpecList = graphicWalkerVizStore.exportViewSpec();
         component.data = {
-          spec: spec
+          visSpecList: visSpecList
         };
       }
     }
@@ -508,10 +510,7 @@ class ComponentEditPanel extends React.Component {
       this.setState({
         graphicWalkerVizStore: vizStore
       });
-      let spec= this.state.data?.spec;
-      if (spec) {
-        vizStore.renderSpec(spec);
-      }
+      loadVisSpecList(vizStore, this.state.data?.visSpecList);
     }
   }
 
@@ -527,7 +526,6 @@ class ComponentEditPanel extends React.Component {
         hideDataSourceConfig={true}
         dataSource={queryResultData}
         rawFields={fields}
-        keepAlive={true}
         retrieveVizStore={this.setGraphicWalkerVizStore}
     />);
   }
