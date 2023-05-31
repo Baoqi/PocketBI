@@ -7,7 +7,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@wubaoqi/graphic-walker": "^0.3.6-patch2-hotfix1",
+    "@wubaoqi/graphic-walker": "^0.3.6-patch2-hotfix6",
     "antd": "^5.5.1",
     "axios": "^0.27.2",
     "echarts": "^5.3.3",

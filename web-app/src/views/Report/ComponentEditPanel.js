@@ -526,6 +526,7 @@ class ComponentEditPanel extends React.Component {
         hideDataSourceConfig={true}
         dataSource={queryResultData}
         rawFields={fields}
+        fieldKeyGuard={false}
         retrieveVizStore={this.setGraphicWalkerVizStore}
     />);
   }
