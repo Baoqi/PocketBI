@@ -17,6 +17,8 @@ import DatePicker from './filters/DatePicker';
 import Card from './widgets/Card';
 import Kanban from './Kanban/Kanban';
 import { getEChartsComponent } from "./echarts/ComponentFactory";
+import {translateToGraphicWalkerFields} from "../api/GraphicWalkerUtil";
+import {GraphicWalker} from "@wubaoqi/graphic-walker";
 
 class GridItem extends React.PureComponent {
 
@@ -253,6 +255,17 @@ class GridItem extends React.PureComponent {
           />
         );
 
+      } else if (subType === Constants.GRAPHIC_WALKER) {
+        let fields = translateToGraphicWalkerFields(columns, queryResultData);
+        componentItem = (
+            <GraphicWalker
+                spec={data?.spec}
+                dataSource={queryResultData}
+                rawFields={fields}
+                keepAlive={true}
+                showChartOnly={true}
+            />
+        );
       } else {
         const chartOption = getEChartsComponent(subType).getChartOption(queryResultData, data, title);
         componentItem = (

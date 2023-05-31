@@ -21,10 +21,12 @@ import SelectButtons from '../../components/SelectButtons/SelectButtons';
 import InputRange from '../../components/filters/InputRange';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Checkbox from '../../components/Checkbox/Checkbox';
-import { Modal } from 'antd';
 import { getEChartsComponent } from "../../components/echarts/ComponentFactory";
 import {createRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
 import {findItemById} from "../../api/Util";
+import {GraphicWalker} from "@wubaoqi/graphic-walker";
+import {Modal} from "antd";
+import {convertIVisSpecToSpecification, translateToGraphicWalkerFields} from "../../api/GraphicWalkerUtil";
 
 const TABLE_DEFAULT_PAGE_SIZES = [5, 10, 20, 25, 50, 100];
 
@@ -63,7 +65,8 @@ class ComponentEditPanel extends React.Component {
       chartOption: {},
       showSchema: false,
       schemas: [],
-      searchSchemaName: ''
+      searchSchemaName: '',
+      graphicWalkerVizStore: undefined
     };
   }
 
@@ -230,7 +233,8 @@ class ComponentEditPanel extends React.Component {
       type,
       subType,
       style,
-      data
+      data,
+      graphicWalkerVizStore
     } = this.state;
 
     const component = {
@@ -257,6 +261,16 @@ class ComponentEditPanel extends React.Component {
       component.data = {
         queryParameter: queryParameter,
         defaultParamValue: defaultParamValue
+      }
+    }
+
+    if (type === Constants.CHART && subType === Constants.GRAPHIC_WALKER) {
+      if (graphicWalkerVizStore) {
+        let visSpec = graphicWalkerVizStore.exportViewSpec();
+        let spec = convertIVisSpecToSpecification(visSpec);
+        component.data = {
+          spec: spec
+        };
       }
     }
 
@@ -489,6 +503,35 @@ class ComponentEditPanel extends React.Component {
     return chartConfigPanel;
   }
 
+  setGraphicWalkerVizStore = (vizStore) => {
+    if (this.state.graphicWalkerVizStore !== vizStore) {
+      this.setState({
+        graphicWalkerVizStore: vizStore
+      });
+      let spec= this.state.data?.spec;
+      if (spec) {
+        vizStore.renderSpec(spec);
+      }
+    }
+  }
+
+  renderVegaLiteConfigPanel = () => {
+    const {
+      queryResultColumns = [],
+      queryResultData = [],
+    } = this.state;
+
+    let fields = translateToGraphicWalkerFields(queryResultColumns, queryResultData);
+
+    return (<GraphicWalker
+        hideDataSourceConfig={true}
+        dataSource={queryResultData}
+        rawFields={fields}
+        keepAlive={true}
+        retrieveVizStore={this.setGraphicWalkerVizStore}
+    />);
+  }
+
   renderStaticConfigPanel = () => {
     const { t } = this.props;
     const { 
@@ -647,7 +690,7 @@ class ComponentEditPanel extends React.Component {
     }
 
     // Render the column list.
-    const columnItems = this.state.queryResultColumns.map(column =>
+    const columnItems = this.state.queryResultColumns?.map(column =>
       <div className="row schema-column-row" key={column.name}>
         <div className="float-left schema-column-name">{column.name}</div>
         <div className="float-right schema-column-type">{column.dbType}({column.length})</div> 
@@ -880,7 +923,7 @@ class ComponentEditPanel extends React.Component {
                   </div>
                 )}
 
-                { type === Constants.CHART && (
+                { type === Constants.CHART && subType !== Constants.GRAPHIC_WALKER && (
                   <div className="row">
                     <div className="float-left" style={{width: '300px'}}>
                       <label>{t('Columns')}</label>
@@ -892,6 +935,12 @@ class ComponentEditPanel extends React.Component {
                       {this.renderChartConfigPanel()} 
                     </div>
                   </div>
+                )}
+
+                { type === Constants.CHART && subType === Constants.GRAPHIC_WALKER && (
+                    <div className="row">
+                      {this.renderVegaLiteConfigPanel()}
+                    </div>
                 )}
               </div>
             </div>

@@ -21,7 +21,8 @@ export const TREEMAP = 'treemap';
 export const FUNNEL = 'funnel';
 export const CARD = 'card';
 export const KANBAN = 'kanban';
-export const CHART_TYPES = [TABLE, PIE, LINE, BAR, AREA, CARD, FUNNEL, TREEMAP, HEATMAP, KANBAN];
+export const GRAPHIC_WALKER = 'graphic walker';
+export const CHART_TYPES = [TABLE, PIE, LINE, BAR, AREA, CARD, FUNNEL, TREEMAP, HEATMAP, KANBAN, GRAPHIC_WALKER];
 
 export const IMAGE = 'image';
 export const TEXT = 'text';
