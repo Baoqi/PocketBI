@@ -16,7 +16,15 @@ import { withRouter } from '../../components/routing/RouterUtil';
 import * as Constants from '../../api/Constants';
 import * as Util from '../../api/Util';
 import './Report.css';
-import {deleteOneRecord, getFullRecordList, getOneRecord, updateRecord} from "../../api/PocketBaseApi";
+import {
+  client,
+  createRecord,
+  deleteOneRecord,
+  getFullRecordList,
+  getOneRecord,
+  updateRecord
+} from "../../api/PocketBaseApi";
+import DropdownDialog from "../../components/DropdownDialog/DropdownDialog";
 
 
 
@@ -29,7 +37,9 @@ class ReportEditView extends React.Component {
       // Modal
       showComponentEditPanel: false,
       showConfirmDeletionPanel: false,
+      showCannedReportPanel: false,
       showControl: true,
+      showFunctionButtonDialog: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
       isEditMode: false,
@@ -46,7 +56,9 @@ class ReportEditView extends React.Component {
       project: '',
       style: {},
       reportType: '',
-      reportViewWidth: 1000
+      reportViewWidth: 1000,
+      cannedReportName: '',
+      cannedReportData: {}
     }
 
     this.componentViewPanel = React.createRef();
@@ -101,8 +113,22 @@ class ReportEditView extends React.Component {
                 this.refresh();
               });
             });
+        } else if (reportType === Constants.CANNED) {
+          getOneRecord('vis_canned_report', reportId)
+              .then(res => {
+                const cannedReport = res;
+                const { data: report } = cannedReport;
+                this.setState({
+                  reportId: cannedReport.id,
+                  name: report.name,
+                  style: report.style,
+                  reportType: reportType,
+                  cannedReportData: report
+                }, () => {
+                  this.refresh();
+                });
+              });
         }
-        
       }
     });
 
@@ -147,9 +173,8 @@ class ReportEditView extends React.Component {
     showControl = showControl === null ? true : showControl === 'true';
     const fromReport = params.get('$fromReport');
     const reportName = params.get('$toReport');
-    //let reportType = params.get('$reportType');
-    //reportType = reportType === Constants.CANNED ? Constants.CANNED : Constants.ADHOC;
-    let reportType = Constants.ADHOC;
+    let reportType = params.get('$reportType');
+    reportType = reportType === Constants.CANNED ? Constants.CANNED : Constants.ADHOC;
     const reportViewWidth = this.getPageWidth();
 
     this.setState({
@@ -236,11 +261,17 @@ class ReportEditView extends React.Component {
     const { 
       reportId,
       reportViewWidth,
-      reportType
+      reportType,
+      cannedReportData
     } = this.state;
 
     if (reportType === Constants.ADHOC) {
       this.componentViewPanel.current.fetchComponents(reportId, reportViewWidth, this.getUrlFilterParams());
+    } else if (reportType === Constants.CANNED) {
+      const {
+        components = []
+      } = cannedReportData;
+      this.componentViewPanel.current.buildViewPanel(components, reportViewWidth, false);
     }
   }
 
@@ -329,6 +360,8 @@ class ReportEditView extends React.Component {
     } = this.state;
     if (reportType === Constants.ADHOC) {
       this.componentViewPanel.current.queryCharts(this.getUrlFilterParams());
+    } else if (reportType === Constants.CANNED) {
+      // TODO: query local data.
     }
     this.setState({
       isPendingApplyFilters: false
@@ -423,6 +456,12 @@ class ReportEditView extends React.Component {
           this.props.onReportDelete(reportId);
           this.closeConfirmDeletionPanel();
         });
+    } else if (reportType === Constants.CANNED) {
+      deleteOneRecord('vis_canned_report', reportId)
+          .then(res => {
+            this.props.onCannedReportDelete(reportId);
+            this.closeConfirmDeletionPanel();
+          });
     }
   }
 
@@ -467,6 +506,44 @@ class ReportEditView extends React.Component {
       urlFilterParams.push(filterParam);
     }
     return urlFilterParams;
+  }
+
+  saveCannedReport = () => {
+    const {
+      cannedReportName,
+      style = {}
+    } = this.state;
+
+    if (!cannedReportName) {
+      toast.error('Enter a name.');
+      return;
+    }
+
+    const components = this.componentViewPanel.current.getComponentsSnapshot();
+    if (Util.isArrayEmpty(components)) {
+      toast.error('Report is empty.');
+      return;
+    }
+
+    const report = {
+      created_by: client.authStore.model.id,
+      name: cannedReportName,
+      data: {
+        name: cannedReportName,
+        style: style,
+        components: components
+      }
+    };
+
+    createRecord('vis_canned_report', report)
+        .then(res => {
+          this.setState({
+            showCannedReportPanel: false,
+            cannedReportName: ''
+          });
+          toast.success('Saved.');
+          this.props.onCannedReportSave();
+        });
   }
 
   onDatePickerChange = (name, date) => {
@@ -533,8 +610,8 @@ class ReportEditView extends React.Component {
     // buttons not displayed in full screen view.
     const fullScreenExcludeButtonPanel = (
       <React.Fragment>
-        <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
-          <FontAwesomeIcon icon="tv" title={t('Show')}  fixedWidth />
+        <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showFunctionButtonDialog: true })}>
+          <FontAwesomeIcon icon="ellipsis-h" title={t('Show')}  fixedWidth />
         </button>
       </React.Fragment>
     );
@@ -579,6 +656,12 @@ class ReportEditView extends React.Component {
               {commonButtonPanel}
               {fullScreenExcludeButtonPanel}
             </React.Fragment>
+          );
+        } else if (reportType === Constants.CANNED) {
+          buttonGroupPanel = (
+              <button className="button square-button button-transparent ml-4" onClick={this.deleteReport}>
+                <FontAwesomeIcon icon="trash-alt"  fixedWidth />
+              </button>
           );
         }
       }
@@ -643,7 +726,25 @@ class ReportEditView extends React.Component {
             onSave={this.onComponentSave}
         />
 
-        <Modal 
+        <Modal
+            open={this.state.showCannedReportPanel}
+            onCancel={() => this.setState({ showCannedReportPanel: false })}
+            onOk={this.saveCannedReport}
+            okText={t('Save')}
+            title={t('Save Canned Report')} >
+          <div className="form-panel">
+            <label>{t('Name')}</label>
+            <input
+                className="form-input"
+                type="text"
+                name="cannedReportName"
+                value={this.state.cannedReportName}
+                onChange={(event) => this.handleInputChange('cannedReportName', event.target.value)}
+            />
+          </div>
+        </Modal>
+
+        <Modal
           open={this.state.showConfirmDeletionPanel}
           onCancel={this.closeConfirmDeletionPanel}
           onOk={this.confirmDelete}
@@ -766,6 +867,20 @@ class ReportEditView extends React.Component {
             </div>
           </div>
         )}
+
+        <DropdownDialog
+            show={this.state.showFunctionButtonDialog}
+            onClose={() => this.setState({ showFunctionButtonDialog: false })}
+        >
+          <div className="form-panel">
+            <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
+              <FontAwesomeIcon icon="archive" title={t('Save Canned Report')}  fixedWidth />
+            </button>
+            <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
+              <FontAwesomeIcon icon="tv" title={t('Show')}  fixedWidth />
+            </button>
+          </div>
+        </DropdownDialog>
       </React.Fragment>
     )
   };

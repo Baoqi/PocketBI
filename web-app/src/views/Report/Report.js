@@ -12,9 +12,11 @@ import { Modal } from 'antd';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import { withRouter } from '../../components/routing/RouterUtil';
 import {createRecord, getFullRecordList} from "../../api/PocketBaseApi";
+import Tabs from "../../components/Tabs/Tabs";
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
-const ROUTE_PATTERNS = [ROUTE_WORKSPACE_REPORT];
+const ROUTE_WORKSPACE_CANNED_REPORT = '/workspace/report/canned/';
+const ROUTE_PATTERNS = [ROUTE_WORKSPACE_REPORT, ROUTE_WORKSPACE_CANNED_REPORT];
 const AD_HOC = 'Ad Hoc';
 
 class Report extends Component {
@@ -29,7 +31,9 @@ class Report extends Component {
       activeReportId: 0,
       name: '',
       project: '',
+      cannedReports: [],
       activeTab: t(AD_HOC),
+      activeCannedReportId: 0,
       projects: [],
       nonProjectReports: []
     }
@@ -48,13 +52,22 @@ class Report extends Component {
           activeTab = t(AD_HOC);
           this.setState({
             activeReportId: activeReportId,
-            activeTab: activeTab
+            activeTab: activeTab,
+            activeCannedReportId: 0
+          });
+        } else if (pattern === ROUTE_WORKSPACE_CANNED_REPORT) {
+          activeTab = t('Canned');
+          this.setState({
+            activeReportId: 0,
+            activeTab: activeTab,
+            activeCannedReportId: activeReportId
           });
         }
         break;
       }
     }
     this.fetchReports();
+    this.fetchCannedReports();
   }
 
   fetchReports = () => {
@@ -93,6 +106,16 @@ class Report extends Component {
       });
   }
 
+  fetchCannedReports = () => {
+    getFullRecordList('vis_canned_report')
+        .then(res => {
+          const cannedReports = res || [];
+          this.setState({
+            cannedReports: cannedReports
+          });
+        });
+  }
+
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
@@ -108,6 +131,7 @@ class Report extends Component {
   onTabChange = (activeTab) => {
     this.setState({
       activeTab: activeTab,
+      activeCannedReportId: 0,
       activeReportId: 0
     }, () => {
       this.props.navigate('/workspace/report');
@@ -168,6 +192,13 @@ class Report extends Component {
     });
   }
 
+  viewCannedReport = (reportId) => {
+    this.setState({
+      activeCannedReportId: reportId
+    }, () => {
+      this.props.navigate(`/workspace/report/canned/${reportId}`);
+    });
+  }
 
   onReportSave = (reportId) => {
     this.fetchReports();
@@ -177,6 +208,19 @@ class Report extends Component {
     this.fetchReports();
     this.setState({
       activeReportId: 0
+    }, () => {
+      this.props.navigate('/workspace/report');
+    });
+  }
+
+  onCannedReportSave = () => {
+    this.fetchCannedReports();
+  }
+
+  onCannedReportDelete = (reportId) => {
+    this.fetchCannedReports();
+    this.setState({
+      activeCannedReportId: 0
     }, () => {
       this.props.navigate('/workspace/report');
     });
@@ -203,6 +247,8 @@ class Report extends Component {
       reports = [],
       activeReportId,
       searchValue,
+      cannedReports = [],
+      activeCannedReportId,
       projects = [],
       nonProjectReports = []
     } = this.state;
@@ -273,6 +319,22 @@ class Report extends Component {
       }
     }
 
+    const cannedReportRows = [];
+    for (let i = 0; i < cannedReports.length; i++) {
+      const report = cannedReports[i];
+      const name = report.name;
+      const menuActive = activeCannedReportId === report.id ? 'report-menu-item-active' : '';
+      if (!searchValue || (searchValue && name.includes(searchValue))) {
+        cannedReportRows.push(
+          (
+            <div key={i} className={`report-menu-item ellipsis ${menuActive}`} onClick={() => this.viewCannedReport(report.id)}>
+              {name}
+            </div>
+          )
+        )
+      }
+    }
+
     const info = editable && reports.length === 0 ? 'Create a new report!' : 'Select a report!';
 
     return (
@@ -293,17 +355,21 @@ class Report extends Component {
             />
           </div>
           <div style={{padding: '0px 5px'}}>
-            {/*<Tabs*/}
-            {/*  activeTab={this.state.activeTab}*/}
-            {/*  onTabChange={this.onTabChange}*/}
-            {/*  >*/}
+            <Tabs
+              activeTab={this.state.activeTab}
+              onTabChange={this.onTabChange}
+              >
 
               <div title={t('Ad Hoc')} iconOnly={true} icon={'clipboard'}>
                 {projectRows}
                 {nonProjectReportRows}
               </div>
 
-            {/*</Tabs>*/}
+              <div title={t('Canned')} iconOnly={true} icon={'archive'}>
+                {cannedReportRows}
+              </div>
+
+            </Tabs>
             
           </div>
         </div>
@@ -318,7 +384,19 @@ class Report extends Component {
                         onReportDelete={this.onReportDelete}
                         editable={editable}
                         reportType={Constants.ADHOC}
+                        onCannedReportSave={this.onCannedReportSave}
                     />
+                }
+            />
+            <Route
+                path="canned/:id"
+                element={
+                  <ReportEditView
+                      key={this.props.location.key}
+                      onCannedReportDelete={this.onCannedReportDelete}
+                      editable={false}
+                      reportType={Constants.CANNED}
+                  />
                 }
             />
             <Route element = {<EmptyReport
