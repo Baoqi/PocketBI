@@ -16,7 +16,7 @@ import Tabs from "../../components/Tabs/Tabs";
 
 const ROUTE_WORKSPACE_REPORT = '/workspace/report/';
 const ROUTE_WORKSPACE_CANNED_REPORT = '/workspace/report/canned/';
-const ROUTE_PATTERNS = [ROUTE_WORKSPACE_REPORT, ROUTE_WORKSPACE_CANNED_REPORT];
+const ROUTE_PATTERNS = [ROUTE_WORKSPACE_CANNED_REPORT, ROUTE_WORKSPACE_REPORT];
 const AD_HOC = 'Ad Hoc';
 
 class Report extends Component {
