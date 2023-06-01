@@ -46,7 +46,7 @@ class Report extends Component {
       const pattern = ROUTE_PATTERNS[i];
       const index = pathname.indexOf(pattern);
       if (index !== -1) {
-        const activeReportId = Number(pathname.substring(index + pattern.length));
+        const activeReportId = pathname.substring(index + pattern.length);
         let activeTab;
         if (pattern === ROUTE_WORKSPACE_REPORT) {
           activeTab = t(AD_HOC);
