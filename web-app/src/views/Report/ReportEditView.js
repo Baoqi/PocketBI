@@ -185,20 +185,37 @@ class ReportEditView extends React.Component {
       showControl: showControl,
       reportType: reportType
     }, () => {
-      // MAYBE: support canned report?
-      getFullRecordList('vis_report', {
+      let collectionName = 'vis_report';
+      if (reportType === Constants.CANNED) {
+        collectionName = 'vis_canned_report';
+      }
+      getFullRecordList(collectionName, {
         filter: `name="${reportName}"`
       })
         .then(res => {
           if (res?.length > 0) {
-            const result = res[0];
-            this.setState({
-              reportId: result.id,
-              name: result.name,
-              style: result.style
-            }, () => {
-              this.refresh();
-            });
+            if (reportType === Constants.ADHOC) {
+              const result = res[0];
+              this.setState({
+                reportId: result.id,
+                name: result.name,
+                style: result.style
+              }, () => {
+                this.refresh();
+              });
+            } else {
+              const cannedReport = res[0];
+              const { data: report } = cannedReport;
+              this.setState({
+                reportId: cannedReport.id,
+                name: report.name,
+                style: report.style,
+                reportType: reportType,
+                cannedReportData: report
+              }, () => {
+                this.refresh();
+              });
+            }
           }
         });
     });
@@ -370,8 +387,8 @@ class ReportEditView extends React.Component {
   }
 
   fullScreen = () => {
-    const { name } = this.state;
-    const url = `/workspace/report/fullscreen?$toReport=${name}`;
+    const { name, reportType } = this.state;
+    const url = `/workspace/report/fullscreen?$toReport=${name}&$reportType=${reportType}`;
     window.open(url, '_blank');
   }
 
@@ -663,9 +680,16 @@ class ReportEditView extends React.Component {
           );
         } else if (reportType === Constants.CANNED) {
           buttonGroupPanel = (
-              <button className="button square-button button-transparent ml-4" onClick={this.deleteReport}>
-                <FontAwesomeIcon icon="trash-alt"  fixedWidth />
-              </button>
+              <React.Fragment>
+                <Tooltip title={t('Show')}>
+                  <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
+                    <FontAwesomeIcon icon="tv" fixedWidth />
+                  </button>
+                </Tooltip>
+                <button className="button square-button button-transparent ml-4" onClick={this.deleteReport}>
+                  <FontAwesomeIcon icon="trash-alt"  fixedWidth />
+                </button>
+              </React.Fragment>
           );
         }
       }
