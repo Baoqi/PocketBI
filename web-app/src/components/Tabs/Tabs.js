@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Tabs as AntdTabs } from 'antd';
+import {Tabs as AntdTabs, Tooltip} from 'antd';
 
 function Tabs(props) {
   const {
@@ -25,7 +25,11 @@ function Tabs(props) {
       }
 
       if (iconOnly) {
-        item.label = (<FontAwesomeIcon icon={icon} title={title} size="lg" />)
+        item.label = (
+            <Tooltip key={title} title={title}>
+              <FontAwesomeIcon icon={icon} size="lg" />
+            </Tooltip>
+        )
       }
 
       tabItems.push(item);

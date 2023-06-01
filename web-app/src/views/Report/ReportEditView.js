@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import ComponentViewPanel from './ComponentViewPanel';
 import ComponentEditPanel from './ComponentEditPanel';
 
-import { Modal } from 'antd';
+import {Modal, Tooltip} from 'antd';
 import ColorPicker from '../../components/ColorPicker/ColorPicker';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import { withRouter } from '../../components/routing/RouterUtil';
@@ -610,9 +610,11 @@ class ReportEditView extends React.Component {
     // buttons not displayed in full screen view.
     const fullScreenExcludeButtonPanel = (
       <React.Fragment>
-        <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showFunctionButtonDialog: true })}>
-          <FontAwesomeIcon icon="ellipsis-h" title={t('Show')}  fixedWidth />
-        </button>
+        <Tooltip title={t('Show')}>
+          <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showFunctionButtonDialog: true })}>
+            <FontAwesomeIcon icon="ellipsis-h" fixedWidth />
+          </button>
+        </Tooltip>
       </React.Fragment>
     );
 
@@ -628,9 +630,11 @@ class ReportEditView extends React.Component {
     )
 
     const editButton = (
-      <button className="button square-button button-transparent ml-4" onClick={this.edit}>
-        <FontAwesomeIcon icon="edit"  fixedWidth />
-      </button>
+      <Tooltip title={t('Edit')}>
+        <button className="button square-button button-transparent ml-4" onClick={this.edit}>
+          <FontAwesomeIcon icon="edit"  fixedWidth />
+        </button>
+      </Tooltip>
     );
 
     let buttonGroupPanel;
@@ -873,12 +877,16 @@ class ReportEditView extends React.Component {
             onClose={() => this.setState({ showFunctionButtonDialog: false })}
         >
           <div className="form-panel">
-            <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
-              <FontAwesomeIcon icon="archive" title={t('Save Canned Report')}  fixedWidth />
-            </button>
-            <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
-              <FontAwesomeIcon icon="tv" title={t('Show')}  fixedWidth />
-            </button>
+            <Tooltip title={t('Save Canned Report')}>
+              <button className="button square-button button-transparent ml-4" onClick={() => this.setState({ showCannedReportPanel: true })}>
+                <FontAwesomeIcon icon="archive" fixedWidth />
+              </button>
+            </Tooltip>
+            <Tooltip title={t('Show')}>
+              <button className="button square-button button-transparent ml-4" onClick={this.fullScreen}>
+                <FontAwesomeIcon icon="tv" fixedWidth />
+              </button>
+            </Tooltip>
           </div>
         </DropdownDialog>
       </React.Fragment>
