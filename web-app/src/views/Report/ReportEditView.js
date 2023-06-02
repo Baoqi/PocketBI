@@ -25,6 +25,7 @@ import {
   updateRecord
 } from "../../api/PocketBaseApi";
 import DropdownDialog from "../../components/DropdownDialog/DropdownDialog";
+import axios from "axios";
 
 
 
@@ -39,6 +40,7 @@ class ReportEditView extends React.Component {
       showConfirmDeletionPanel: false,
       showCannedReportPanel: false,
       showControl: true,
+      showSharePanel: false,
       showFunctionButtonDialog: false,
       isPendingApplyFilters: false,
       objectToDelete: {},
@@ -58,7 +60,8 @@ class ReportEditView extends React.Component {
       reportType: '',
       reportViewWidth: 1000,
       cannedReportName: '',
-      cannedReportData: {}
+      cannedReportData: {},
+      shareKeyId: ''
     }
 
     this.componentViewPanel = React.createRef();
@@ -78,8 +81,12 @@ class ReportEditView extends React.Component {
       const url = this.props.location.search;
       const params = new URLSearchParams(url);
       const reportName = params.get('$toReport');
+      const shareKey = params.get('$shareKey');
       if (reportName !== null) {
         this.loadViewByReportName();
+        return;
+      } else if (shareKey !== null) {
+        this.loadViewByShareKey();
         return;
       }
     }
@@ -218,6 +225,42 @@ class ReportEditView extends React.Component {
             }
           }
         });
+    });
+  }
+
+  loadViewByShareKey = () => {
+    const url = this.props.location.search;
+    const params = new URLSearchParams(url);
+    const shareKey = params.get('$shareKey');
+    const reportViewWidth = this.getPageWidth();
+    this.setState({
+      isFullScreenView: true,
+      reportViewWidth: reportViewWidth,
+      reportType: Constants.CANNED
+    }, () => {
+      // MAYBE: support canned report? can only handle Adhoc report for now.
+      axios.post(`/biz/get-report-by-key`,
+          {
+            share_key: shareKey
+          })
+          .then(res => {
+            if (res?.data?.error) {
+                toast.error(res.data.error);
+                return;
+            }
+
+            const { data: report } = res.data;
+
+            this.setState({
+              reportId: res.data.id,
+              name: report.name,
+              style: report.style,
+              reportType: Constants.CANNED,
+              cannedReportData: report
+            }, () => {
+              this.refresh();
+            });
+          });
     });
   }
 
@@ -563,6 +606,31 @@ class ReportEditView extends React.Component {
         });
   }
 
+  openSharePanel = () => {
+    this.setState({
+      showSharePanel: true,
+      shareKeyId: ''
+    });
+  }
+
+  generateShareUrl = () => {
+    const {
+      reportId,
+    } = this.state;
+
+    const sharedReport = {
+      created_by: client.authStore.model.id,
+      report_id: reportId,
+    }
+
+    createRecord('vis_shared_report', sharedReport)
+        .then(res => {
+          this.setState({
+            shareKeyId: res.id
+          });
+        });
+  }
+
   onDatePickerChange = (name, date) => {
     this.setState({
       [name]: date
@@ -686,6 +754,11 @@ class ReportEditView extends React.Component {
                     <FontAwesomeIcon icon="tv" fixedWidth />
                   </button>
                 </Tooltip>
+                <Tooltip title={t('Share')}>
+                  <button className="button square-button button-transparent ml-4" onClick={this.openSharePanel}>
+                    <FontAwesomeIcon icon="share-square" title={t('Share')} fixedWidth />
+                  </button>
+                </Tooltip>
                 <button className="button square-button button-transparent ml-4" onClick={this.deleteReport}>
                   <FontAwesomeIcon icon="trash-alt"  fixedWidth />
                 </button>
@@ -780,6 +853,22 @@ class ReportEditView extends React.Component {
           title={t('Confirm Deletion')}>
           <div className="confirm-deletion-panel">
             {t('Are you sure you want to delete')} {this.state.objectToDelete.name}?
+          </div>
+        </Modal>
+
+        <Modal
+            open={this.state.showSharePanel}
+            onCancel={() => this.setState({ showSharePanel: false })}
+            title={t('Share')}
+            onOk={this.generateShareUrl}
+            okText={t('Generate URL')}
+        >
+          <div className="form-panel">
+            <label>{t('Name')}</label>
+            <div className="form-input bg-grey">{this.state.name}</div>
+
+            <label>{t('Type')}</label>
+            <div className="form-input bg-grey">{this.state.reportType}</div>
           </div>
         </Modal>
 

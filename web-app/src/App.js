@@ -31,6 +31,7 @@ import PageNotFound from './views/PageNotFound';
 import Login from './views/Login/Login';
 import * as Util from './api/Util';
 import {client, PB_BASE_URL} from "./api/PocketBaseApi";
+import ReportFullScreenView from "./views/ReportFullScreenView";
 
 
 library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
@@ -131,6 +132,7 @@ class App extends React.Component {
                   (<Workspace onLogout={this.onLogout} />) :
                   (<Navigate replace to='/login' />)
           } />
+          <Route exact path="shared_report" element={<ReportFullScreenView />} />
           <Route element={<PageNotFound />} />
         </Routes>
         <ToastContainer

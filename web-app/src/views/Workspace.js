@@ -12,6 +12,7 @@ import './Workspace.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Select } from 'antd';
+import SharedReportView from "./Event/SharedReportView";
 
 const MENU_ITEMS = [
   {
@@ -23,6 +24,16 @@ const MENU_ITEMS = [
     link: '/workspace/datasource',
     value: 'Data Source',
     icon: 'database'
+  },
+  {
+    value: 'Event',
+    icon: 'search-location',
+    dropdowns: [
+      {
+        link: '/workspace/sharedreport',
+        value: 'Shared Reports',
+      }
+    ]
   }
 ];
 
@@ -185,6 +196,7 @@ class Workspace extends React.Component {
             <Route exact path="datasource" element={<DataSource />} />
             <Route exact path="report/fullscreen" element={<ReportFullScreenView />} />
             <Route path="report/*" element={<Report {...this.props} />} />
+            <Route exact path="sharedreport" element={<SharedReportView />} />
             <Route element={<PageNotFound />} />
           </Routes>
         </div>
