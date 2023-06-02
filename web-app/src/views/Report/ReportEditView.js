@@ -607,16 +607,37 @@ class ReportEditView extends React.Component {
   }
 
   openSharePanel = () => {
-    this.setState({
-      showSharePanel: true,
-      shareKeyId: ''
+    const {
+      reportId,
+    } = this.state;
+
+    getFullRecordList('vis_shared_report', {
+      filter: `report_id="${reportId}"`
+    }).then(res => {
+      if (res?.length > 0) {
+        const result = res[0];
+        this.setState({
+          showSharePanel: true,
+          shareKeyId: result.id,
+        });
+      } else {
+        this.setState({
+          showSharePanel: true,
+          shareKeyId: '',
+        });
+      }
     });
   }
 
   generateShareUrl = () => {
     const {
       reportId,
+      shareKeyId
     } = this.state;
+    if (shareKeyId) {
+      toast.error("Already shared.");
+      return;
+    }
 
     const sharedReport = {
       created_by: client.authStore.model.id,
@@ -626,7 +647,10 @@ class ReportEditView extends React.Component {
     createRecord('vis_shared_report', sharedReport)
         .then(res => {
           this.setState({
-            shareKeyId: res.id
+            shareKeyId: res.id,
+            showSharePanel: false
+          }, () => {
+            toast.success('Shared.');
           });
         });
   }
@@ -869,6 +893,15 @@ class ReportEditView extends React.Component {
 
             <label>{t('Type')}</label>
             <div className="form-input bg-grey">{this.state.reportType}</div>
+
+            { this.state.shareKeyId && (
+                <React.Fragment>
+                  <label>{t('Share Key')}</label>
+                  <div className="form-input word-break-all bg-grey">
+                    <a href={'/shared_report?$shareKey=' + this.state.shareKeyId} target={'_blank'}>{this.state.shareKeyId}</a>
+                  </div>
+                </React.Fragment>
+            )}
           </div>
         </Modal>
 
