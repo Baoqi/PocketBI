@@ -898,7 +898,7 @@ class ReportEditView extends React.Component {
                 <React.Fragment>
                   <label>{t('Share Key')}</label>
                   <div className="form-input word-break-all bg-grey">
-                    <a href={'/shared_report?$shareKey=' + this.state.shareKeyId} target={'_blank'}>{this.state.shareKeyId}</a>
+                    <a href={'/shared_report?$shareKey=' + this.state.shareKeyId} target={'_blank'} rel={'noreferrer'}>{this.state.shareKeyId}</a>
                   </div>
                 </React.Fragment>
             )}
