@@ -308,3 +308,55 @@ func TransformErrorIntoJsonMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		return nil
 	}
 }
+
+type GuandataColumn struct {
+	Name   string `json:"name"`
+	DbType string `json:"dbType" db:"type"`
+	SeqNo  int64  `json:"seqNo" db:"seq_no"`
+}
+
+func QueryColumnsForChat2Answer(connectionUrl string, tableName string) ([]GuandataColumn, error) {
+	db, err := getConnection(connectionUrl)
+	if err != nil {
+		return nil, err
+	}
+	columns := make([]GuandataColumn, 0)
+	err = db.Select(&columns, "DESCRIBE "+tableName)
+	if err != nil {
+		return nil, err
+	}
+	return columns, nil
+}
+
+func QuerySQLforChat2Answer(connectionUrl string, sql string) (*QueryResponse, error) {
+	db, err := getConnection(connectionUrl)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := db.Queryx(sql)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	columns, err := getColumns(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make([]map[string]interface{}, 0)
+	for rows.Next() {
+		m := make(map[string]interface{})
+		err := rows.MapScan(m)
+		if err != nil {
+			continue
+		}
+		results = append(results, m)
+	}
+
+	return &QueryResponse{
+		Columns: columns,
+		Data:    results,
+	}, nil
+}

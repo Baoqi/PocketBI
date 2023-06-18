@@ -136,3 +136,7 @@
   bottom: 0;
   z-index: 150;
 }
+
+.inline-block {
+  display: inline-block;
+}

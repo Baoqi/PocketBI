@@ -34,6 +34,8 @@ func main() {
 		e.Router.POST("/sqlquery/schema", sqlquery.Schema, apis.RequireRecordAuth("users"), sqlquery.TransformErrorIntoJsonMiddleware, apis.ActivityLogger(app))
 
 		e.Router.POST("/biz/get-report-by-key", queryByShareKey.QueryByShareKeyHandler, sqlquery.TransformErrorIntoJsonMiddleware, apis.ActivityLogger(app))
+		e.Router.POST("/biz/chat2answer-query-columns", queryByShareKey.QueryTableSchemaHandler, sqlquery.TransformErrorIntoJsonMiddleware, apis.ActivityLogger(app))
+		e.Router.POST("/biz/chat2answer-query-chatgpt", queryByShareKey.QueryChatGPTHandler, sqlquery.TransformErrorIntoJsonMiddleware, apis.ActivityLogger(app))
 
 		e.Router.GET("/*", apis.StaticDirectoryHandler(subFs, true))
 

@@ -59,10 +59,6 @@ textarea {
   float: right;
 }
 
-.inline-block {
-  display: inline-block;
-}
-
 .ellipsis {
   text-overflow: ellipsis;
   white-space: nowrap;

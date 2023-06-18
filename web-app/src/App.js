@@ -32,6 +32,7 @@ import Login from './views/Login/Login';
 import * as Util from './api/Util';
 import {client, PB_BASE_URL} from "./api/PocketBaseApi";
 import ReportFullScreenView from "./views/ReportFullScreenView";
+import VizChatView from "./views/VizChatView";
 
 
 library.add(faChalkboard, faDatabase, faUsersCog, faPlus, faTimes, 
@@ -133,6 +134,7 @@ class App extends React.Component {
                   (<Navigate replace to='/login' />)
           } />
           <Route exact path="shared_report" element={<ReportFullScreenView />} />
+          <Route exact path="chat" element={<VizChatView />} />
           <Route element={<PageNotFound />} />
         </Routes>
         <ToastContainer
