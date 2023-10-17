@@ -941,6 +941,12 @@ class ComponentEditPanel extends React.Component {
                       {this.renderVegaLiteConfigPanel()}
                     </div>
                 )}
+
+                { type === Constants.CHART && subType === Constants.PLOT && (
+                    <div className="row">
+                      {this.renderVegaLiteConfigPanel()}
+                    </div>
+                )}
               </div>
             </div>
 

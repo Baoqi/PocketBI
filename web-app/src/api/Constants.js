@@ -22,7 +22,8 @@ export const FUNNEL = 'funnel';
 export const CARD = 'card';
 export const KANBAN = 'kanban';
 export const GRAPHIC_WALKER = 'graphic walker';
-export const CHART_TYPES = [TABLE, PIE, LINE, BAR, AREA, CARD, FUNNEL, TREEMAP, HEATMAP, KANBAN, GRAPHIC_WALKER];
+export const PLOT = 'plot';
+export const CHART_TYPES = [TABLE, PIE, LINE, BAR, AREA, CARD, FUNNEL, TREEMAP, HEATMAP, KANBAN, GRAPHIC_WALKER, PLOT];
 
 export const IMAGE = 'image';
 export const TEXT = 'text';
@@ -37,8 +38,8 @@ export const SYS_ROLE_ADMIN = 'admin';
 export const SYS_ROLE_DEVELOPER = 'developer';
 export const SYS_ROLE_VIEWER = 'viewer';
 
-export const DEFAULT_REPORT_HEIGHT = 600;
-export const DEFAULT_REPORT_FIXED_WIDTH = 800;
+export const DEFAULT_REPORT_HEIGHT = 900;
+export const DEFAULT_REPORT_FIXED_WIDTH = 1000;
 
 export const REMEMBERME = 'rememberMe';
 export const YES = 'yes';

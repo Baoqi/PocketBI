@@ -19,6 +19,7 @@ import Kanban from './Kanban/Kanban';
 import { getEChartsComponent } from "./echarts/ComponentFactory";
 import {translateToGraphicWalkerFields} from "../api/GraphicWalkerUtil";
 import GraphicWalkerChartViewer from "./GraphicWalker/GraphicWalkerChartViewer";
+import PlotViewer from "./Plot/PlotViewer";
 
 class GridItem extends React.PureComponent {
 
@@ -263,6 +264,12 @@ class GridItem extends React.PureComponent {
                 rawFields={fields}
                 visSpecList={data?.visSpecList}
             ></GraphicWalkerChartViewer>
+        );
+      } else if (subType === Constants.PLOT) {
+        componentItem = (
+            <PlotViewer
+                dataSource={queryResultData}
+            ></PlotViewer>
         );
       } else {
         const chartOption = getEChartsComponent(subType).getChartOption(queryResultData, data, title);

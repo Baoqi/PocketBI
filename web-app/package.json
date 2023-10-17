@@ -8,7 +8,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@heroicons/react": "^2.0.18",
+    "@observablehq/plot": "^0.6.11",
     "@wubaoqi/graphic-walker": "^0.3.6-patch2-hotfix6",
+    "add": "^2.0.6",
     "antd": "^5.5.1",
     "axios": "^0.27.2",
     "echarts": "^5.3.3",
@@ -23,7 +25,8 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^5.5.0",
-    "styled-components": "^5.3.11"
+    "styled-components": "^5.3.11",
+    "yarn": "^1.22.19"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,7 +37,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://localhost:8090",
+  "proxy": "http://localhost:8091",
   "browserslist": {
     "production": [
       ">0.2%",
