@@ -4,6 +4,10 @@ import axios from 'axios';
 import AceEditor from 'react-ace';
 import "ace-builds/src-noconflict/mode-mysql";
 import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/worker-html";
+import "ace-builds/src-noconflict/worker-javascript";
 import "ace-builds/src-noconflict/theme-xcode";
 import "ace-builds/src-noconflict/ext-language_tools";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -179,6 +183,14 @@ class ComponentEditPanel extends React.Component {
   handleInnerHtmlChange = (newValue) => {
     const data = {...this.state.data};
     data.innerHtml = newValue;
+    this.setState({
+      data: data
+    });
+  }
+
+  handlePlotScriptChange = (newValue) => {
+    let data = {...this.state.data};
+    data.plotScript = newValue;
     this.setState({
       data: data
     });
@@ -922,7 +934,7 @@ class ComponentEditPanel extends React.Component {
                   </div>
                 )}
 
-                { type === Constants.CHART && subType !== Constants.GRAPHIC_WALKER && (
+                { type === Constants.CHART && subType !== Constants.GRAPHIC_WALKER && subType !== Constants.PLOT && (
                   <div className="row">
                     <div className="float-left" style={{width: '300px'}}>
                       <label>{t('Columns')}</label>
@@ -944,7 +956,32 @@ class ComponentEditPanel extends React.Component {
 
                 { type === Constants.CHART && subType === Constants.PLOT && (
                     <div className="row">
-                      {this.renderVegaLiteConfigPanel()}
+                      <div className="float-left" style={{width: '300px'}}>
+                        <label>{t('Columns')}</label>
+                        <div style={{backgroundColor: '#FFFFFF'}}>
+                          {columnItems}
+                        </div>
+                      </div>
+                      <div className="form-panel">
+                        <label>{t('Plot Script')}</label>
+                        <AceEditor
+                            value={this.state.data?.plotScript}
+                            mode="java"
+                            theme="xcode"
+                            name="innerPlot"
+                            key="innerPlot"
+                            onChange={this.handlePlotScriptChange}
+                            height={'300px'}
+                            width={'100%'}
+                            fontSize={15}
+                            showPrintMargin={false}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            setOptions={{
+                              showLineNumbers: true,
+                              tabSize: 2
+                            }}/>
+                      </div>
                     </div>
                 )}
               </div>

@@ -1,27 +1,41 @@
-import * as Plot from "@observablehq/plot";
-import {useEffect, useRef, useState} from "react";
+import * as PlotImport from "@observablehq/plot";
+import * as D3Import from 'd3';
+import {useEffect, useLayoutEffect, useRef, useState} from "react";
 
 function PlotViewer(props) {
     const containerRef = useRef();
-    let {dataSource} = props;
-    console.log('data source is: ', dataSource);
+    let {dataSource, plotScript} = props;
+    const [width, setWidth] = useState(0);
+    const [height, setHeight] = useState(0);
+
+    useLayoutEffect(() => {
+        setWidth(containerRef.current.offsetWidth);
+        setHeight( containerRef.current.offsetHeight);
+    }, []);
 
     useEffect(() => {
         let data = dataSource;
-        if (data === undefined) return;
-        const plot = Plot.plot({
-            y: {grid: true},
-            color: {scheme: "burd"},
-            marks: [
-                Plot.ruleY([0]),
-                Plot.text(['text 123'], {x: 100, y: 100})
-            ]
-        });
-        containerRef.current.append(plot);
-        return () => plot.remove();
-    }, [dataSource]);
+        if (data === undefined || width === 0 || height === 0) return;
 
-    return <div ref={containerRef} />;
+        try {
+            // eslint-disable-next-line no-unused-vars
+            const Plot = PlotImport;
+            // eslint-disable-next-line no-unused-vars
+            const d3 = D3Import;
+            // eslint-disable-next-line no-eval
+            const plot = eval(plotScript);
+            containerRef.current.append(plot);
+            return () => plot.remove();
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+    }, [dataSource, plotScript, width, height]);
+
+    return <div style={{
+        height: '100%',
+        width: '100%'
+    }} ref={containerRef} />;
 }
 
 export default PlotViewer;
