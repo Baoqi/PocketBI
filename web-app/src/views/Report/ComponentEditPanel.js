@@ -196,6 +196,14 @@ class ComponentEditPanel extends React.Component {
     });
   }
 
+  handleTransformScriptChange = (newValue) => {
+    let data = {...this.state.data};
+    data.transformScript = newValue;
+    this.setState({
+      data: data
+    });
+  }
+
   handleIntegerChange = (name, value) => {
     const intValue = (parseInt(value, 10) || 0);
     this.setState({ 
@@ -961,6 +969,26 @@ class ComponentEditPanel extends React.Component {
                         <div style={{backgroundColor: '#FFFFFF'}}>
                           {columnItems}
                         </div>
+                      </div>
+                      <div className="form-panel">
+                        <label>{t('Transform Script(Optional)')}</label>
+                        <AceEditor
+                            value={this.state.data?.transformScript}
+                            mode="java"
+                            theme="xcode"
+                            name="innerTransformPlot"
+                            key="innerTransformPlot"
+                            onChange={this.handleTransformScriptChange}
+                            height={'50px'}
+                            width={'100%'}
+                            fontSize={15}
+                            showPrintMargin={false}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            setOptions={{
+                              showLineNumbers: true,
+                              tabSize: 2
+                            }}/>
                       </div>
                       <div className="form-panel">
                         <label>{t('Plot Script')}</label>

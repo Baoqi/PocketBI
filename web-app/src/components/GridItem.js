@@ -270,6 +270,7 @@ class GridItem extends React.PureComponent {
             <PlotViewer
                 dataSource={queryResultData}
                 plotScript={data?.plotScript}
+                transformScript={data?.transformScript}
             ></PlotViewer>
         );
       } else {

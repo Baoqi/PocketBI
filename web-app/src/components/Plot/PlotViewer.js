@@ -4,7 +4,7 @@ import {useEffect, useLayoutEffect, useRef, useState} from "react";
 
 function PlotViewer(props) {
     const containerRef = useRef();
-    let {dataSource, plotScript} = props;
+    let {dataSource, plotScript, transformScript} = props;
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
 
@@ -22,6 +22,11 @@ function PlotViewer(props) {
             const Plot = PlotImport;
             // eslint-disable-next-line no-unused-vars
             const d3 = D3Import;
+
+            if (transformScript !== undefined && transformScript.trim() !== '') {
+                // eslint-disable-next-line no-eval
+                data = eval(transformScript);
+            }
             // eslint-disable-next-line no-eval
             const plot = eval(plotScript);
             containerRef.current.append(plot);
