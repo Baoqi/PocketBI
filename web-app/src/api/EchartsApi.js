@@ -33,13 +33,15 @@ const SHINE_COLOR_PALETTE = [
 export const keyValueToLegendSeries = (key, value, data) => {
   const legendData = [];
   const seriesData = [];
-  for (let i = 0; i < data?.length; i++) {
-    const row = data[i];
-    legendData.push(row[key]);
-    seriesData.push({
-      name: row[key],
-      value: row[value]
-    });  
+  if (key !== undefined && value !== undefined) {
+    for (let i = 0; i < data?.length; i++) {
+      const row = data[i];
+      legendData.push(row[key]);
+      seriesData.push({
+        name: row[key],
+        value: row[value]
+      });
+    }
   }
   return {
     legendData,
