@@ -29,8 +29,19 @@ function PlotViewer(props) {
             }
             // eslint-disable-next-line no-eval
             const plot = eval(plotScript);
-            containerRef.current.append(plot);
-            return () => plot.remove();
+            if (Array.isArray(plot)) {
+                for (let i = 0; i < plot.length; i++) {
+                    containerRef.current.append(plot[i]);
+                }
+                return () => {
+                    for (let i = plot.length - 1; i >= 0; i--) {
+                        plot[i].remove();
+                    }
+                }
+            } else {
+                containerRef.current.append(plot);
+                return () => plot.remove();
+            }
         } catch (error) {
             console.error(error);
             return;
