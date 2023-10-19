@@ -1,6 +1,6 @@
 import * as PlotImport from "@observablehq/plot";
 import * as D3Import from 'd3';
-import {useEffect, useLayoutEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 function PlotViewer(props) {
     const containerRef = useRef();
@@ -8,9 +8,14 @@ function PlotViewer(props) {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
 
-    useLayoutEffect(() => {
-        setWidth(containerRef.current.offsetWidth);
-        setHeight( containerRef.current.offsetHeight);
+    useEffect(() => {
+        const updateDimensions = () => {
+            setWidth(containerRef.current.offsetWidth);
+            setHeight( containerRef.current.offsetHeight);
+        };
+        updateDimensions();
+        window.addEventListener('resize', updateDimensions);
+        return () => window.removeEventListener('resize', updateDimensions);
     }, []);
 
     useEffect(() => {
@@ -46,7 +51,7 @@ function PlotViewer(props) {
             console.error(error);
             return;
         }
-    }, [dataSource, plotScript, width, height]);
+    }, [dataSource, plotScript, transformScript, width, height]);
 
     return <div style={{
         height: '100%',
