@@ -28,7 +28,7 @@ function PlotViewer(props) {
             // eslint-disable-next-line no-unused-vars
             const d3 = D3Import;
 
-            if (transformScript !== undefined && transformScript.trim() !== '') {
+            if (transformScript && transformScript.trim() !== '') {
                 // eslint-disable-next-line no-eval
                 data = eval(transformScript);
             }

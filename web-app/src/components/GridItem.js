@@ -202,11 +202,11 @@ class GridItem extends React.PureComponent {
     let componentItem = (<div></div>);
     if (type === Constants.CHART) {
       if (subType === Constants.TABLE) {
-        const { 
+        const {
           defaultPageSize = 10,
           showPagination = true,
           fixedHeader = false
-        } = data;
+        } = data || {};
 
         let tableHeight = null;
         if (fixedHeader) {
